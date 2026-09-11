@@ -1,0 +1,122 @@
+# PRNG Core Algorithms & State Management for rand package
+# Part of the Alya Language package ecosystem (https://github.com/alya-lang)
+
+import "std/time"
+import "../types.alya"
+
+# Generates a high-entropy seed by mixing time, clock ms, and bitwise rotation
+function algo_auto_seed()
+    let t = time()
+    let ms = clock_ms()
+    let s = (t * 1000000) + ms
+    s = bit_xor(s, bit_shr(s, 30))
+    s = s * 7046029254386353
+    s = bit_xor(s, bit_shr(s, 27))
+    if s == 0
+        s = 12345678901234567
+    end
+    if s < 0
+        s = 0 - s
+    end
+    return s
+end
+
+# Creates and initializes a new RNG instance
+function rng_new(seed = 0, algorithm = 2)
+    if seed == 0
+        seed = algo_auto_seed()
+    end
+    if seed < 0
+        seed = 0 - seed
+    end
+    if seed == 0
+        seed = 88172645463325252
+    end
+
+    let inc = 1442695040888963407
+    return Rng {
+        algorithm: algorithm,
+        state0: seed,
+        state1: bit_xor(seed, 6364136223846793005),
+        inc: inc
+    }
+end
+
+# Internal SplitMix64 step
+function _splitmix64_next(rng)
+    rng.state0 = rng.state0 + 7046029254386353003
+    let z = rng.state0
+    z = bit_xor(z, bit_shr(z, 30)) * 6364136223846793005
+    z = bit_xor(z, bit_shr(z, 27))
+    let out = bit_xor(z, bit_shr(z, 31))
+    if out < 0
+        out = 0 - out
+    end
+    return out
+end
+
+# Internal Xorshift64 step
+function _xorshift64_next(rng)
+    let s = rng.state0
+    s = bit_xor(s, bit_shl(s, 13))
+    s = bit_xor(s, bit_shr(s, 7))
+    s = bit_xor(s, bit_shl(s, 17))
+    if s == 0
+        s = 88172645463325252
+    end
+    rng.state0 = s
+    if s < 0
+        s = 0 - s
+    end
+    return s
+end
+
+# Internal PCG32 step
+function _pcg32_next(rng)
+    let old = rng.state0
+    rng.state0 = old * 6364136223846793005 + rng.inc
+    let xsh = bit_shr(bit_xor(bit_shr(old, 18), old), 27)
+    let rot = bit_shr(old, 59)
+    let r32 = bit_and(rot, 31)
+    let out = bit_or(bit_shr(xsh, r32), bit_shl(xsh, bit_and(32 - r32, 31)))
+    out = bit_and(out, 2147483647)
+    return out
+end
+
+# Internal LCG step
+function _lcg_next(rng)
+    let s = rng.state0 * 6364136223846793005 + 1442695040888963407
+    rng.state0 = s
+    if s < 0
+        s = 0 - s
+    end
+    return s
+end
+
+# Advances RNG and returns a non-negative pseudo-random integer in [0, 2147483647]
+function rng_next(rng)
+    if rng.algorithm == 1
+        return bit_and(_xorshift64_next(rng), 2147483647)
+    elif rng.algorithm == 2
+        return bit_and(_splitmix64_next(rng), 2147483647)
+    elif rng.algorithm == 3
+        return bit_and(_pcg32_next(rng), 2147483647)
+    elif rng.algorithm == 4
+        return bit_and(_lcg_next(rng), 2147483647)
+    else
+        return bit_and(_splitmix64_next(rng), 2147483647)
+    end
+end
+
+# Generates random bits in range [0, 2^bits - 1] (bits <= 60)
+function rng_next_bits(rng, bits)
+    if bits <= 0
+        return 0
+    end
+    let val = rng_next(rng)
+    if bits >= 60
+        return val
+    end
+    let mask = bit_shl(1, bits) - 1
+    return bit_and(val, mask)
+end

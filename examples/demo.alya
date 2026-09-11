@@ -1,15 +1,71 @@
-# Example usage of rand
-import "../src/lib.alya" as pkg
+# demo.alya - Interactive showcase of the rand package for Alya
+import "../src/lib.alya" as rand
 
 function main()
-    # Basic greeting
-    let msg = pkg::hello("Alya Developer")
-    say msg
+    say "=== Alya 'rand' Package Showcase ==="
+    say ""
 
-    # Using configuration struct
-    let cfg = pkg::new_config("Modular Architecture", 5)
-    say "Target: " + cfg.name
-    say "Formatted: " + pkg::core_format_custom(cfg)
+    # 1. Global Convenience Functions
+    say "--- 1. Basic Generation ---"
+    say "Random Raw Int:     " + str(rand::next())
+    say "Random Int [1..10]: " + str(rand::int(1, 10))
+    let rf = rand::rand_float()
+    let rf_range = rand::float_range(1.0, 5.0)
+    say "Random Float [0..1): {rf}"
+    say "Random Float [1..5): {rf_range}"
+    say "Random Bool:        " + str(rand::bool())
+    say "Chance (75%):       " + str(rand::chance(75))
+    say "Die Roll (d20):     " + str(rand::die(20))
+    say ""
+
+    # 2. PRNG Engines (Deterministic with Seeds)
+    say "--- 2. Deterministic PRNG Engines ---"
+    let rng_sm = rand::new(12345, rand::ALG_SPLITMIX64)
+    let rng_xor = rand::new(12345, rand::ALG_XORSHIFT64)
+    let rng_pcg = rand::new(12345, rand::ALG_PCG32)
+    say "SplitMix64 seed 12345 #1: " + str(rand::rng_int(rng_sm, 1, 100))
+    say "SplitMix64 seed 12345 #2: " + str(rand::rng_int(rng_sm, 1, 100))
+    say "Xorshift64 seed 12345:    " + str(rand::rng_int(rng_xor, 1, 100))
+    say "PCG32      seed 12345:    " + str(rand::rng_int(rng_pcg, 1, 100))
+    say ""
+
+    # 3. Statistical Distributions
+    say "--- 3. Statistical Distributions ---"
+    let norm_val = rand::normal(100.0, 15.0)
+    let exp_val = rand::exponential(1.5)
+    say "Normal (mean=100, stddev=15): {norm_val}"
+    say "Exponential (rate=1.5):       {exp_val}"
+    say "Bernoulli (p=0.3):            " + str(rand::bernoulli(0.3))
+    say "Binomial (n=10, p=0.5):        " + str(rand::binomial(10, 0.5))
+    say ""
+
+    # 4. Sampling and Collections
+    say "--- 4. Collection Sampling & Shuffling ---"
+    let fruits = ["apple", "banana", "cherry", "date", "elderberry"]
+    say "Random Choice:     " + str_from_ptr(rand::choice(fruits))
+    let choices_list = rand::choices(fruits, 3)
+    say "Random 3 Choices:  [" + str_from_ptr(choices_list[0]) + ", " + str_from_ptr(choices_list[1]) + ", " + str_from_ptr(choices_list[2]) + "]"
+    let sample_list = rand::sample(fruits, 3)
+    say "Random 3 Sample:   [" + str_from_ptr(sample_list[0]) + ", " + str_from_ptr(sample_list[1]) + ", " + str_from_ptr(sample_list[2]) + "]"
+    let shuffled_list = rand::shuffled(fruits)
+    say "Shuffled Copy:     [" + str_from_ptr(shuffled_list[0]) + ", " + str_from_ptr(shuffled_list[1]) + ", " + str_from_ptr(shuffled_list[2]) + ", " + str_from_ptr(shuffled_list[3]) + ", " + str_from_ptr(shuffled_list[4]) + "]"
+
+    let loot = ["Common (70%)", "Rare (25%)", "Legendary (5%)"]
+    let weights = [70, 25, 5]
+    say "Weighted Choice:   " + str_from_ptr(rand::weighted_choice(loot, weights))
+    say ""
+
+    # 5. Strings and Identifiers
+    say "--- 5. Identifiers & Random Strings ---"
+    say "Alphanumeric (16): " + rand::alphanumeric(16)
+    say "Digits (6 OTP):    " + rand::digits(6)
+    say "Hex (16):          " + rand::hex(16)
+    say "UUID v4:           " + rand::uuid_v4()
+    say "UUID v7 (Time):    " + rand::uuid_v7()
+    say "ULID:              " + rand::ulid()
+    say "NanoID (21):       " + rand::nanoid(21)
+    say ""
+    say "Done!"
 end
 
 main()

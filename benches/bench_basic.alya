@@ -1,26 +1,74 @@
 # Benchmark suite for rand
 import "std/bench"
-import "../src/lib.alya" as pkg
+import "../src/lib.alya" as rand
 
 function main()
     let runner = bench_runner("rand Micro-Benchmarks")
 
-    bench_start(runner, 100000)
+    # 1. Global PRNG next()
+    bench_start(runner, 1000000)
     let i = 0
-    while i < 100000
-        pkg::hello("Alya")
+    while i < 1000000
+        rand::next()
         i += 1
     end
-    bench_stop(runner, "hello() 100k calls")
+    bench_stop(runner, "rand::next() 1M calls")
 
-    bench_start(runner, 50000)
+    # 2. Integer Range Generation
+    bench_start(runner, 500000)
     let j = 0
-    while j < 50000
-        let cfg = pkg::new_config("Bench", 1)
-        pkg::core_format_custom(cfg)
+    while j < 500000
+        rand::int(1, 100)
         j += 1
     end
-    bench_stop(runner, "new_config() + format_custom() 50k calls")
+    bench_stop(runner, "rand::int(1, 100) 500k calls")
+
+    # 3. Dedicated Xorshift64 Instance
+    let rng_xor = rand::new(12345, rand::ALG_XORSHIFT64)
+    bench_start(runner, 500000)
+    let k = 0
+    while k < 500000
+        rand::rng_int(rng_xor, 1, 100)
+        k += 1
+    end
+    bench_stop(runner, "Xorshift64 rng_int 500k calls")
+
+    # 4. Dedicated SplitMix64 Instance
+    let rng_sm = rand::new(12345, rand::ALG_SPLITMIX64)
+    bench_start(runner, 500000)
+    let m = 0
+    while m < 500000
+        rand::rng_int(rng_sm, 1, 100)
+        m += 1
+    end
+    bench_stop(runner, "SplitMix64 rng_int 500k calls")
+
+    # 5. UUID v4 Generation
+    bench_start(runner, 50000)
+    let u4 = 0
+    while u4 < 50000
+        rand::uuid_v4()
+        u4 += 1
+    end
+    bench_stop(runner, "rand::uuid_v4() 50k calls")
+
+    # 6. UUID v7 Generation
+    bench_start(runner, 50000)
+    let u7 = 0
+    while u7 < 50000
+        rand::uuid_v7()
+        u7 += 1
+    end
+    bench_stop(runner, "rand::uuid_v7() 50k calls")
+
+    # 7. NanoID Generation
+    bench_start(runner, 50000)
+    let nid = 0
+    while nid < 50000
+        rand::nanoid(21)
+        nid += 1
+    end
+    bench_stop(runner, "rand::nanoid(21) 50k calls")
 
     bench_summary(runner)
 end

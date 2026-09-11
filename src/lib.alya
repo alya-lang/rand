@@ -1,14 +1,661 @@
-# rand library
+# Modern, fast pseudo-random number generator (PRNG), statistical distributions,
+# UUID v4/v7, ULID, and sampling toolkit for Alya
 # Part of the Alya Language package ecosystem (https://github.com/alya-lang)
 
 import "./types.alya"
-import "./core/formatter.alya"
+import "./core/algorithms.alya"
+import "./core/distributions.alya"
+import "./core/sampling.alya"
+import "./core/strings.alya"
+import "./core/identifiers.alya"
 
-# Public facade functions
-function hello(name = "World")
-    return core_format_greeting(name)
+# ═══════════════════════════════════════════════════════════════
+# Global PRNG State Management
+# ═══════════════════════════════════════════════════════════════
+
+# Seeds the global PRNG
+function seed(s)
+    rand_seed(s)
 end
 
-function new_config(name = "World", count = 1)
-    return make_config(name, count)
+# Auto-seeds the global PRNG with system time and high-resolution timer
+function auto_seed()
+    let s = (time() * 1000) + (clock_ms() % 1000) + rand()
+    rand_seed(s)
+end
+
+# Creates a new independent RNG instance
+function new(seed = 0, algorithm = 2)
+    return rng_new(seed, algorithm)
+end
+
+# Creates a new independent RNG instance
+function new_rng(seed = 0, algorithm = 2)
+    return rng_new(seed, algorithm)
+end
+
+# ═══════════════════════════════════════════════════════════════
+# Top-Level Global Convenience Facade
+# ═══════════════════════════════════════════════════════════════
+
+# Generates a pseudo-random integer in [0, 2147483647] using global PRNG
+function next()
+    let r = rand()
+    if r < 0
+        r = 0 - r
+    end
+    return bit_and(r, 2147483647)
+end
+
+# Generates a random integer in inclusive range [min_val, max_val]
+function int(min_val, max_val)
+    if min_val >= max_val
+        return min_val
+    end
+    let r = next()
+    let range = (max_val - min_val) + 1
+    return min_val + (r % range)
+end
+
+# Generates a random float in range [0.0, 1.0)
+function rand_float()
+    let r = next() % 1000000000
+    return r / 1000000000.0
+end
+
+# Generates a random float in range [min_val, max_val)
+function rand_float_range(min_val, max_val)
+    if min_val >= max_val
+        return min_val
+    end
+    let f = rand_float()
+    return min_val + (f * (max_val - min_val))
+end
+
+# Alias for rand_float_range
+function float_range(min_val, max_val)
+    if min_val >= max_val
+        return min_val
+    end
+    let f = rand_float()
+    return min_val + (f * (max_val - min_val))
+end
+
+# Returns 1 or 0 with 50% probability
+function bool()
+    return next() % 2
+end
+
+# Returns 1 if event with percentage 'pct' (0..100) occurs, else 0
+function chance(pct)
+    if pct <= 0
+        return 0
+    end
+    if pct >= 100
+        return 1
+    end
+    return (next() % 100) < pct
+end
+
+# Bernoulli trial with probability p (0.0 <= p <= 1.0)
+function bernoulli(p)
+    if p <= 0.0
+        return 0
+    end
+    if p >= 1.0
+        return 1
+    end
+    let sample = rand_float()
+    if sample < p
+        return 1
+    else
+        return 0
+    end
+end
+
+# Binomial trial with n attempts and success probability p
+function binomial(n, p)
+    if n <= 0 or p <= 0.0
+        return 0
+    end
+    let successes = 0
+    let i = 0
+    while i < n
+        successes += bernoulli(p)
+        i += 1
+    end
+    return successes
+end
+
+# Gaussian / Normal distribution using Box-Muller transform
+function normal(mean = 0.0, std_dev = 1.0)
+    let r1 = next() % 1000000000
+    if r1 <= 0
+        r1 = 1
+    end
+    let u1 = r1 / 1000000000.0
+
+    let r2 = next() % 1000000000
+    let u2 = r2 / 1000000000.0
+    let two_pi = 6.283185307179586
+
+    let r = native_sqrt(0.0 - 2.0 * native_log(u1))
+    let theta = two_pi * u2
+    let z0 = r * native_cos(theta)
+    return mean + (z0 * std_dev)
+end
+
+# Exponential distribution with given rate (lambda)
+function exponential(rate = 1.0)
+    if rate <= 0.0
+        return 0.0
+    end
+    let r = next() % 1000000000
+    if r <= 0
+        r = 1
+    end
+    let u = r / 1000000000.0
+    return (0.0 - native_log(1.0 - u)) / (rate * 1.0)
+end
+
+# Simulates rolling an n-sided die (returns 1..sides)
+function die(sides = 6)
+    if sides <= 1
+        return 1
+    end
+    return int(1, sides)
+end
+
+# Selects one random element from array
+function choice(arr)
+    let n = len(arr)
+    if n == 0
+        return null
+    end
+    let idx = int(0, n - 1)
+    return arr[idx]
+end
+
+# Selects 'count' elements from array with replacement
+function choices(arr, count)
+    let n = len(arr)
+    if count <= 0 or n == 0
+        return []
+    end
+    let res = []
+    let i = 0
+    while i < count
+        res.push(choice(arr))
+        i += 1
+    end
+    return res
+end
+
+# In-place Fisher-Yates shuffle
+function shuffle(arr)
+    let n = len(arr)
+    let i = n - 1
+    while i > 0
+        let j = int(0, i)
+        let temp = arr[i]
+        arr[i] = arr[j]
+        arr[j] = temp
+        i -= 1
+    end
+    return arr
+end
+
+# Returns a new shuffled copy of array
+function shuffled(arr)
+    let copy = []
+    let n = len(arr)
+    let i = 0
+    while i < n
+        copy.push(arr[i])
+        i += 1
+    end
+    return shuffle(copy)
+end
+
+# Samples 'count' unique elements from array without replacement
+function sample(arr, count)
+    let n = len(arr)
+    if count <= 0 or n == 0
+        return []
+    end
+    if count >= n
+        return shuffled(arr)
+    end
+    let pool = shuffled(arr)
+    let res = []
+    let i = 0
+    while i < count
+        res.push(pool[i])
+        i += 1
+    end
+    return res
+end
+
+# Selects an item according to relative non-negative weights
+function weighted_choice(items, weights)
+    let n = len(items)
+    if n == 0
+        return null
+    end
+    let w_len = len(weights)
+    if w_len < n
+        return choice(items)
+    end
+
+    let total_weight = 0
+    let i = 0
+    while i < n
+        let w = weights[i]
+        if w > 0
+            total_weight += w
+        end
+        i += 1
+    end
+
+    if total_weight <= 0
+        return choice(items)
+    end
+
+    let threshold = int(1, total_weight)
+    let accum = 0
+    i = 0
+    while i < n
+        let w = weights[i]
+        if w > 0
+            accum += w
+            if threshold <= accum
+                return items[i]
+            end
+        end
+        i += 1
+    end
+
+    return items[0]
+end
+
+# Generates a random string of length 'n' from charset
+function string(n, charset)
+    let clen = len(charset)
+    if clen == 0 or n <= 0
+        return ""
+    end
+    let res = ""
+    let i = 0
+    while i < n
+        let idx = int(0, clen - 1)
+        res = res + char_at(charset, idx)
+        i += 1
+    end
+    return res
+end
+
+# Generates an alphanumeric string ([a-zA-Z0-9])
+function alphanumeric(n)
+    let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    return string(n, chars)
+end
+
+# Generates a numeric digits string ([0-9])
+function digits(n)
+    let digs = "0123456789"
+    return string(n, digs)
+end
+
+# Generates a lowercase hexadecimal string ([0-9a-f])
+function hex(n)
+    let h = "0123456789abcdef"
+    return string(n, h)
+end
+
+# Generates an uppercase hexadecimal string ([0-9A-F])
+function hex_upper(n)
+    let h = "0123456789ABCDEF"
+    return string(n, h)
+end
+
+# Generates a printable ASCII string
+function ascii(n)
+    let chars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_bcdefghijklmnopqrstuvwxyz{|}~"
+    return string(n, chars)
+end
+
+# RFC 4122 UUID v4
+function uuid_v4()
+    let h = "0123456789abcdef"
+    let variant_chars = "89ab"
+    let res = ""
+
+    let i = 0
+    while i < 8
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+    res = res + "-"
+
+    i = 0
+    while i < 4
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+    res = res + "-4"
+
+    i = 0
+    while i < 3
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+    res = res + "-" + char_at(variant_chars, int(0, 3))
+
+    i = 0
+    while i < 3
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+    res = res + "-"
+
+    i = 0
+    while i < 12
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+
+    return res
+end
+
+# 32-hex UUID v4 without hyphens
+function uuid_v4_simple()
+    let h = "0123456789abcdef"
+    let variant_chars = "89ab"
+    let res = ""
+
+    let i = 0
+    while i < 12
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+    res = res + "4"
+
+    i = 0
+    while i < 3
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+    res = res + char_at(variant_chars, int(0, 3))
+
+    i = 0
+    while i < 15
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+
+    return res
+end
+
+# RFC 9562 UUID v7 for a given millisecond timestamp
+function uuid_v7_at(timestamp_ms)
+    let h = "0123456789abcdef"
+    let variant_chars = "89ab"
+    let time_hex = _uuid_v7_hex_time(timestamp_ms)
+
+    let p1 = substring(time_hex, 0, 8)
+    let p2 = substring(time_hex, 8, 4)
+
+    let p3 = "7"
+    let i = 0
+    while i < 3
+        p3 = p3 + char_at(h, int(0, 15))
+        i += 1
+    end
+
+    let p4 = char_at(variant_chars, int(0, 3))
+    i = 0
+    while i < 3
+        p4 = p4 + char_at(h, int(0, 15))
+        i += 1
+    end
+
+    let p5 = ""
+    i = 0
+    while i < 12
+        p5 = p5 + char_at(h, int(0, 15))
+        i += 1
+    end
+
+    return p1 + "-" + p2 + "-" + p3 + "-" + p4 + "-" + p5
+end
+
+# RFC 9562 UUID v7 using current system time
+function uuid_v7()
+    let now_ms = (time() * 1000) + (clock_ms() % 1000)
+    return uuid_v7_at(now_ms)
+end
+
+# 32-hex UUID v7 without hyphens for a given millisecond timestamp
+function uuid_v7_simple_at(timestamp_ms)
+    let h = "0123456789abcdef"
+    let variant_chars = "89ab"
+    let time_hex = _uuid_v7_hex_time(timestamp_ms)
+
+    let res = time_hex + "7"
+    let i = 0
+    while i < 3
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+
+    res = res + char_at(variant_chars, int(0, 3))
+    i = 0
+    while i < 3
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+
+    i = 0
+    while i < 12
+        res = res + char_at(h, int(0, 15))
+        i += 1
+    end
+
+    return res
+end
+
+# 32-hex UUID v7 without hyphens using current system time
+function uuid_v7_simple()
+    let now_ms = (time() * 1000) + (clock_ms() % 1000)
+    return uuid_v7_simple_at(now_ms)
+end
+
+# 26-char Crockford Base32 ULID for a specific timestamp
+function ulid_at(timestamp_ms)
+    let chars = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
+    let time_part = _ulid_encode_time(timestamp_ms)
+
+    let rand_part = ""
+    let i = 0
+    while i < 16
+        let idx = int(0, 31)
+        rand_part = rand_part + char_at(chars, idx)
+        i += 1
+    end
+
+    return time_part + rand_part
+end
+
+# 26-char Crockford Base32 ULID using current system time
+function ulid()
+    let now_ms = (time() * 1000) + (clock_ms() % 1000)
+    return ulid_at(now_ms)
+end
+
+# Compact URL-friendly NanoID
+function nanoid(size = 21, alphabet = "")
+    if len(alphabet) == 0
+        alphabet = "_~0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    end
+    return string(size, alphabet)
+end
+
+# ═══════════════════════════════════════════════════════════════
+# Instance-Parameterized Functions (Operate on a specific Rng)
+# ═══════════════════════════════════════════════════════════════
+
+function rng_int(rng, min_val, max_val)
+    return dist_uniform_int(rng, min_val, max_val)
+end
+
+function uniform_int(rng, min_val, max_val)
+    return dist_uniform_int(rng, min_val, max_val)
+end
+
+function rng_float(rng)
+    return dist_float(rng)
+end
+
+function rand_rng_float(rng)
+    return dist_float(rng)
+end
+
+function rng_float_range(rng, min_val, max_val)
+    return dist_uniform_float(rng, min_val, max_val)
+end
+
+function rand_rng_float_range(rng, min_val, max_val)
+    return dist_uniform_float(rng, min_val, max_val)
+end
+
+function uniform_float(rng, min_val, max_val)
+    return dist_uniform_float(rng, min_val, max_val)
+end
+
+function rng_bool(rng)
+    return dist_uniform_int(rng, 0, 1)
+end
+
+function rng_normal(rng, mean = 0.0, std_dev = 1.0)
+    return dist_normal(rng, mean, std_dev)
+end
+
+function rng_exponential(rng, rate = 1.0)
+    return dist_exponential(rng, rate)
+end
+
+function rng_choice(rng, arr)
+    return sample_choice(rng, arr)
+end
+
+function rng_shuffle(rng, arr)
+    return sample_shuffle(rng, arr)
+end
+
+function rng_shuffled(rng, arr)
+    return sample_shuffled(rng, arr)
+end
+
+function rng_sample(rng, arr, count)
+    return sample_sample(rng, arr, count)
+end
+
+function rng_uuid_v4(rng)
+    return id_uuid_v4(rng)
+end
+
+function rng_uuid_v7(rng)
+    return id_uuid_v7(rng)
+end
+
+function rng_ulid(rng)
+    return id_ulid(rng)
+end
+
+function rng_nanoid(rng, size = 21, alphabet = "")
+    return id_nanoid(rng, size, alphabet)
+end
+
+# ═══════════════════════════════════════════════════════════════
+# Geriye Dönük Uyumluluk Takma Adları (std/rand Legacy Aliases)
+# ═══════════════════════════════════════════════════════════════
+
+function rand_seed_state(s)
+    seed(s)
+end
+
+function rand_auto_seed()
+    auto_seed()
+end
+
+function rand_next()
+    return next()
+end
+
+function rand_int(min_val, max_val)
+    return int(min_val, max_val)
+end
+
+function rand_bool()
+    return bool()
+end
+
+function rand_chance(pct)
+    return chance(pct)
+end
+
+function rand_choice(arr)
+    return choice(arr)
+end
+
+function rand_shuffle(arr)
+    return shuffle(arr)
+end
+
+function rand_shuffled(arr)
+    return shuffled(arr)
+end
+
+function rand_sample(arr, count)
+    return sample(arr, count)
+end
+
+function rand_string(n, charset)
+    return string(n, charset)
+end
+
+function rand_alphanumeric(n)
+    return alphanumeric(n)
+end
+
+function rand_digits(n)
+    return digits(n)
+end
+
+function rand_hex(n)
+    return hex(n)
+end
+
+function rand_new(seed = 0)
+    return rng_new(seed, 1) # ALG_XORSHIFT64
+end
+
+function rand_rng_next(rng)
+    return rng_next(rng)
+end
+
+function rand_rng_int(rng, min_val, max_val)
+    return dist_uniform_int(rng, min_val, max_val)
+end
+
+function rand_rng_bool(rng)
+    return dist_uniform_int(rng, 0, 1)
+end
+
+function rand_rng_choice(rng, arr)
+    return sample_choice(rng, arr)
+end
+
+function ulid_generate()
+    return ulid()
 end

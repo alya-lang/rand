@@ -1,0 +1,109 @@
+# Statistical Distributions for rand package
+# Part of the Alya Language package ecosystem (https://github.com/alya-lang)
+
+import "./algorithms.alya"
+
+# Generates a pseudo-random integer in the inclusive range [min_val, max_val]
+function dist_uniform_int(rng, min_val, max_val)
+    if min_val >= max_val
+        return min_val
+    end
+    let r = rng_next(rng)
+    let range = (max_val - min_val) + 1
+    return min_val + (r % range)
+end
+
+# Generates a pseudo-random float in the range [0.0, 1.0)
+function dist_float(rng)
+    let r = rng_next(rng) % 1000000000
+    return r / 1000000000.0
+end
+
+# Generates a pseudo-random float in the range [min_val, max_val)
+function dist_uniform_float(rng, min_val, max_val)
+    if min_val >= max_val
+        return min_val
+    end
+    let f = dist_float(rng)
+    return min_val + (f * (max_val - min_val))
+end
+
+# Returns 1 with probability p (0.0 <= p <= 1.0), else 0
+function dist_bernoulli(rng, p)
+    if p <= 0.0
+        return 0
+    end
+    if p >= 1.0
+        return 1
+    end
+    let sample = dist_float(rng)
+    if sample < p
+        return 1
+    else
+        return 0
+    end
+end
+
+# Simulates n independent Bernoulli trials with success probability p
+function dist_binomial(rng, n, p)
+    if n <= 0 or p <= 0.0
+        return 0
+    end
+    let successes = 0
+    let i = 0
+    while i < n
+        successes += dist_bernoulli(rng, p)
+        i += 1
+    end
+    return successes
+end
+
+# Returns 1 if an event with probability 'pct' (0..100) occurs, else 0
+function dist_chance(rng, pct)
+    if pct <= 0
+        return 0
+    end
+    if pct >= 100
+        return 1
+    end
+    return (rng_next(rng) % 100) < pct
+end
+
+# Generates a normally distributed random float (Gaussian) using Box-Muller transform
+function dist_normal(rng, mean = 0.0, std_dev = 1.0)
+    let r1 = rng_next(rng) % 1000000000
+    if r1 <= 0
+        r1 = 1
+    end
+    let u1 = r1 / 1000000000.0
+
+    let r2 = rng_next(rng) % 1000000000
+    let u2 = r2 / 1000000000.0
+    let two_pi = 6.283185307179586
+
+    let r = native_sqrt(0.0 - 2.0 * native_log(u1))
+    let theta = two_pi * u2
+    let z0 = r * native_cos(theta)
+    return mean + (z0 * std_dev)
+end
+
+# Generates an exponentially distributed random float with given rate (lambda)
+function dist_exponential(rng, rate = 1.0)
+    if rate <= 0.0
+        return 0.0
+    end
+    let r = rng_next(rng) % 1000000000
+    if r <= 0
+        r = 1
+    end
+    let u = r / 1000000000.0
+    return (0.0 - native_log(1.0 - u)) / (rate * 1.0)
+end
+
+# Simulates rolling an n-sided die (returns integer in 1..sides)
+function dist_die_roll(rng, sides = 6)
+    if sides <= 1
+        return 1
+    end
+    return dist_uniform_int(rng, 1, sides)
+end

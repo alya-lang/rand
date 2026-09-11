@@ -1,16 +1,22 @@
 # Types and data structures for rand
 # Part of the Alya Language package ecosystem (https://github.com/alya-lang)
 
-struct RandConfig
-    name
-    prefix
-    count
+# PRNG Algorithm Selectors
+let ALG_XORSHIFT64 = 1
+let ALG_SPLITMIX64 = 2
+let ALG_PCG32      = 3
+let ALG_LCG        = 4
+
+# Pseudo-Random Number Generator State
+struct Rng
+    algorithm
+    state0
+    state1
+    inc
 end
 
-function make_config(name = "World", count = 1)
-    return RandConfig {
-        name: name,
-        prefix: "Hello",
-        count: count
-    }
+# Weighted item structure for weighted choice selections
+struct WeightedItem
+    item
+    weight
 end
