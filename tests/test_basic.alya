@@ -112,6 +112,14 @@ function main()
     let s_custom = rand::string(5, "ABC")
     runner_assert_eq(r, len(s_custom), 5, "rand::string from custom charset")
 
+    let b_bytes = rand::bytes(16)
+    runner_assert_eq(r, len(b_bytes), 16, "rand::bytes(16) generates 16 bytes")
+    let test_rng = rand::new(42)
+    let b_rng = rand::rng_bytes(test_rng, 10)
+    runner_assert_eq(r, len(b_rng), 10, "rand::rng_bytes(rng, 10) generates 10 bytes")
+    let b_legacy = rand::rand_bytes(8)
+    runner_assert_eq(r, len(b_legacy), 8, "rand::rand_bytes(8) legacy generates 8 bytes")
+
     # ═══════════════════════════════════════════════════════════════
     # 6. Unique Identifiers (UUID v4, UUID v7, ULID, NanoID)
     # ═══════════════════════════════════════════════════════════════

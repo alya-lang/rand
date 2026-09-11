@@ -320,8 +320,19 @@ end
 
 # Generates a printable ASCII string
 function ascii(n)
-    let chars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_bcdefghijklmnopqrstuvwxyz{|}~"
+    let chars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ bcdefghijklmnopqrstuvwxyz{|}~"
     return string(n, chars)
+end
+
+# Generates an array of 'count' random byte integers (0..255)
+function bytes(count)
+    let bytes_arr = []
+    let i = 0
+    while i < count
+        bytes_arr.push(int(0, 255))
+        i += 1
+    end
+    return bytes_arr
 end
 
 # RFC 4122 UUID v4
@@ -576,6 +587,11 @@ function rng_nanoid(rng, size = 21, alphabet = "")
     return id_nanoid(rng, size, alphabet)
 end
 
+function rng_bytes(rng, count)
+    return str_bytes(rng, count)
+end
+
+
 # ═══════════════════════════════════════════════════════════════
 # Geriye Dönük Uyumluluk Takma Adları (std/rand Legacy Aliases)
 # ═══════════════════════════════════════════════════════════════
@@ -634,6 +650,10 @@ end
 
 function rand_hex(n)
     return hex(n)
+end
+
+function rand_bytes(count)
+    return bytes(count)
 end
 
 function rand_new(seed = 0)

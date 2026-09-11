@@ -45,6 +45,17 @@ end
 
 # Generates a random printable ASCII string of length 'n' (ASCII 33 to 126)
 function str_ascii(rng, n)
-    let chars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_bcdefghijklmnopqrstuvwxyz{|}~"
+    let chars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ bcdefghijklmnopqrstuvwxyz{|}~"
     return str_random(rng, n, chars)
+end
+
+# Generates an array of 'count' random byte integers (0..255)
+function str_bytes(rng, count)
+    let bytes_arr = []
+    let i = 0
+    while i < count
+        bytes_arr.push(dist_uniform_int(rng, 0, 255))
+        i += 1
+    end
+    return bytes_arr
 end
