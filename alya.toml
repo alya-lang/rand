@@ -1,0 +1,13 @@
+[package]
+name = "rand"
+version = "0.1.0"
+alya-version = "0.0.7"
+entry = "src/lib.alya"
+description = "Modern, fast pseudo-random number generator (PRNG), statistical distributions, UUID v4/v7, ULID, and sampling toolkit for Alya"
+authors = ["Alya Language Contributors <https://github.com/alya-lang>"]
+license = "MIT"
+homepage = "https://github.com/alya-lang/alya"
+repository = "https://github.com/alya-lang/rand"
+keywords = ["alya", "alya-lang", "package", "rand", "random", "prng", "uuid", "ulid", "sampling"]
+
+[dependencies]
