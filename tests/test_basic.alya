@@ -46,12 +46,13 @@ function main()
     runner_assert_eq(r, rand::chance(100), 1, "rand::chance(100) always returns 1")
 
     runner_assert_eq(r, rand::bernoulli(0.0), 0, "rand::bernoulli(0.0) returns 0")
-    runner_assert_eq(r, rand::bernoulli(1.0), 1, "rand::bernoulli(1.0) returns 1")
-
-    # ═══════════════════════════════════════════════════════════════
-    # 3. Statistical Distributions
-    # ═══════════════════════════════════════════════════════════════
+    print("  [DBG] before bernoulli(1.0)")
+    let b1 = rand::bernoulli(1.0)
+    print("  [DBG] bernoulli(1.0) returned: " + str(b1))
+    runner_assert_eq(r, b1, 1, "rand::bernoulli(1.0) returns 1")
+    print("  [DBG] before normal()")
     let norm_val = rand::normal(100.0, 15.0)
+    print("  [DBG] normal() returned: " + str(norm_val))
     runner_assert(r, norm_val > 0.0, "rand::normal produces valid float value")
 
     let exp_val = rand::exponential(2.0)
