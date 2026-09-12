@@ -1,6 +1,6 @@
 [package]
 name = "rand"
-version = "0.1.0"
+version = "0.2.0"
 alya-version = "0.0.12"
 entry = "src/lib.alya"
 description = "Modern, fast pseudo-random number generator (PRNG), statistical distributions, UUID v4/v7, ULID, and sampling toolkit for Alya"
