@@ -36,7 +36,8 @@ function sample_shuffled(rng, arr)
         copy.push(arr[i])
         i += 1
     end
-    return sample_shuffle(rng, copy)
+    sample_shuffle(rng, copy)
+    return copy
 end
 
 # Returns 'count' randomly sampled distinct elements from 'arr' (without replacement)

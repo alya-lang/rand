@@ -214,7 +214,8 @@ function shuffled(arr)
         copy.push(arr[i])
         i += 1
     end
-    return shuffle(copy)
+    shuffle(copy)
+    return copy
 end
 
 # Samples 'count' unique elements from array without replacement
