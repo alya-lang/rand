@@ -591,6 +591,7 @@ function rng_bytes(rng, count)
     return str_bytes(rng, count)
 end
 
+
 # ═══════════════════════════════════════════════════════════════
 # Geriye Dönük Uyumluluk Takma Adları (std/rand Legacy Aliases)
 # ═══════════════════════════════════════════════════════════════
