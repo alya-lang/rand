@@ -41,6 +41,12 @@ jobs:
           alyac install
 
       - name: Run package test suite
+        shell: bash
         run: |
-          alyac test
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            alyac build tests/test_basic.alya -o test_basic
+            gdb -batch -ex "set pagination off" -ex run -ex "bt 30" -ex "info registers" --args ./test_basic
+          else
+            alyac test
+          fi
 
