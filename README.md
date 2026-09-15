@@ -5,7 +5,7 @@
 [![Alya](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Falya-lang%2Frand%2Fmain%2Falya.toml&query=%24.package.alya-version&label=Alya&color=orange&prefix=%3E%3D)](https://github.com/alya-lang/alya)
 [![Package Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Falya-lang%2Frand%2Fmain%2Falya.toml&query=%24.package.version&label=Version&color=brightgreen)](alya.toml)
 
-Modern, fast pseudo-random number generator (PRNG), statistical distributions, UUID v4/v7, ULID, and sampling toolkit for Alya.
+Modern, fast pseudo-random number generator (PRNG), statistical distributions, and sampling toolkit for Alya.
 
 ---
 
@@ -14,9 +14,10 @@ Modern, fast pseudo-random number generator (PRNG), statistical distributions, U
 - ⚡ **High Performance Engines**: Built-in global PRNG (>330M ops/s) alongside dedicated PRNG engines: **SplitMix64**, **Xorshift64**, **PCG32**, and **LCG**.
 - 🎲 **Statistical Distributions**: Uniform ranges (integers and floats), Normal/Gaussian (Box-Muller transform), Exponential, Bernoulli, and Binomial trials.
 - 🎯 **Sampling & Shuffling**: Non-destructive `sample` (without replacement), `choices` (with replacement), `choice`, in-place `shuffle`, `shuffled` copies, and cumulative roulette `weighted_choice`.
-- 🆔 **Modern Unique Identifiers**: RFC 4122 **UUID v4**, RFC 9562 timestamp-ordered **UUID v7**, Crockford Base32 **ULID**, and URL-safe **NanoID**.
-- 🔤 **Random Strings**: Customizable alphanumeric, numeric PIN/OTP, hex tokens, and custom alphabet strings.
-- 🔄 **100% Backward Compatible**: Drop-in aliases for all legacy `std/rand` functions (`rand_int`, `rand_float`, `rand_choice`, `rand_shuffle`, `rand_new`, etc.).
+- 🔤 **Random Strings & Bytes**: Customizable alphanumeric, numeric PIN/OTP, hex tokens, custom alphabet strings, and raw random byte sequences.
+
+> [!NOTE]
+> For RFC 4122 UUID v4, RFC 9562 UUID v7, ULID, and NanoID, use the dedicated canonical package [`alya-lang/uuid`](https://github.com/alya-lang/uuid).
 
 ---
 
@@ -26,18 +27,17 @@ Modern, fast pseudo-random number generator (PRNG), statistical distributions, U
 rand/
 ├── alya.toml                  # Package manifest
 ├── src/
-│   ├── lib.alya               # Public API facade & std/rand aliases
+│   ├── lib.alya               # Public API facade
 │   ├── types.alya             # Rng struct and algorithm constants
 │   └── core/
 │       ├── algorithms.alya    # PRNG engines: SplitMix64, Xorshift64, PCG32, LCG
 │       ├── distributions.alya # Normal, Exponential, Bernoulli, Binomial, Uniform
 │       ├── sampling.alya      # Choice, sample, choices, shuffle, weighted_choice
-│       ├── strings.alya       # Alphanumeric, digits, hex, ascii generators
-│       └── identifiers.alya   # UUID v4, UUID v7, ULID, NanoID
+│       └── strings.alya       # Alphanumeric, digits, hex, ascii generators
 ├── examples/
 │   └── demo.alya              # Comprehensive usage showcase
 ├── tests/
-│   └── test_basic.alya        # Automated test suite (39 tests)
+│   └── test_basic.alya        # Automated test suite
 └── benches/
     └── bench_basic.alya       # Micro-benchmarks
 ```
@@ -78,11 +78,10 @@ function main()
     let pick = rand::choice(items)
     let subset = rand::sample(items, 2) # Without replacement
 
-    # 3. Unique Identifiers
-    let id_v4 = rand::uuid_v4()         # RFC 4122 UUID v4
-    let id_v7 = rand::uuid_v7()         # RFC 9562 UUID v7 (time-sortable)
-    let id_ulid = rand::ulid()          # 26-char Crockford Base32 ULID
-    let token = rand::nanoid(21)        # 21-char NanoID
+    # 3. Random Strings & Bytes
+    let token = rand::alphanumeric(32)
+    let otp = rand::digits(6)
+    let raw_bytes = rand::bytes(16)
 
     # 4. Deterministic RNG with Seed
     let rng = rand::new(42, rand::ALG_SPLITMIX64)
@@ -123,7 +122,7 @@ main()
 | `shuffled(arr)` | `arr: array` | `array` | Returns a new shuffled copy of `arr`. |
 | `weighted_choice(items, weights)` | `items: array, weights: array` | `any` | Selects an item based on relative integer weights using cumulative roulette. |
 
-### Strings & Identifiers
+### Strings & Bytes
 
 | Function | Arguments | Returns | Description |
 |---|---|---|---|
@@ -132,12 +131,7 @@ main()
 | `digits(len = 6)` | `len: int` | `string` | Generates numeric string (ideal for OTP / PIN codes). |
 | `hex(len = 16)` | `len: int` | `string` | Generates lowercase hexadecimal string. |
 | `hex_upper(len = 16)` | `len: int` | `string` | Generates uppercase hexadecimal string. |
-| `uuid_v4()` | - | `string` | RFC 4122 compliant UUID v4 (`xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`). |
-| `uuid_v4_simple()` | - | `string` | 32-character hexadecimal UUID v4 without hyphens. |
-| `uuid_v7()` | - | `string` | RFC 9562 compliant timestamp-ordered UUID v7. |
-| `uuid_v7_simple()` | - | `string` | 32-character hexadecimal UUID v7 without hyphens. |
-| `ulid()` | - | `string` | 26-character Crockford Base32 Universally Unique Lexicographically Sortable Identifier. |
-| `nanoid(size = 21)` | `size: int` | `string` | Compact, URL-friendly unique identifier. |
+| `bytes(count)` | `count: int` | `array` | Generates an array of `count` pseudo-random bytes `[0..255]`. |
 
 ### Deterministic PRNG Engines
 

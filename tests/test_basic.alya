@@ -117,35 +117,9 @@ function main()
     let test_rng = rand::new(42)
     let b_rng = rand::rng_bytes(test_rng, 10)
     runner_assert_eq(r, len(b_rng), 10, "rand::rng_bytes(rng, 10) generates 10 bytes")
-    let b_legacy = rand::rand_bytes(8)
-    runner_assert_eq(r, len(b_legacy), 8, "rand::rand_bytes(8) legacy generates 8 bytes")
 
     # ═══════════════════════════════════════════════════════════════
-    # 6. Unique Identifiers (UUID v4, UUID v7, ULID, NanoID)
-    # ═══════════════════════════════════════════════════════════════
-    let u4 = rand::uuid_v4()
-    runner_assert_eq(r, len(u4), 36, "UUID v4 is exactly 36 characters")
-    runner_assert_str_eq(r, char_at(u4, 8), "-", "UUID v4 hyphen at index 8")
-    runner_assert_str_eq(r, char_at(u4, 13), "-", "UUID v4 hyphen at index 13")
-    runner_assert_str_eq(r, char_at(u4, 14), "4", "UUID v4 version digit is '4'")
-    runner_assert_str_eq(r, char_at(u4, 18), "-", "UUID v4 hyphen at index 18")
-    runner_assert_str_eq(r, char_at(u4, 23), "-", "UUID v4 hyphen at index 23")
-
-    let u4_simple = rand::uuid_v4_simple()
-    runner_assert_eq(r, len(u4_simple), 32, "UUID v4 simple is exactly 32 characters")
-
-    let u7 = rand::uuid_v7()
-    runner_assert_eq(r, len(u7), 36, "UUID v7 is exactly 36 characters")
-    runner_assert_str_eq(r, char_at(u7, 14), "7", "UUID v7 version digit is '7'")
-
-    let u_ulid = rand::ulid()
-    runner_assert_eq(r, len(u_ulid), 26, "ULID is exactly 26 characters")
-
-    let nid = rand::nanoid(12)
-    runner_assert_eq(r, len(nid), 12, "NanoID generates specified size")
-
-    # ═══════════════════════════════════════════════════════════════
-    # 7. Deterministic Seeding & Multiple Engines
+    # 6. Deterministic Seeding & Multiple Engines
     # ═══════════════════════════════════════════════════════════════
     let rng_a = rand::new_rng(42, 2) # SplitMix64
     let val_a1 = rand::uniform_int(rng_a, 1, 1000)
@@ -165,18 +139,6 @@ function main()
     let rng_pcg = rand::new_rng(123, 3) # PCG32
     let val_p = rand::uniform_int(rng_pcg, 1, 100)
     runner_assert(r, val_p >= 1 and val_p <= 100, "PCG32 engine produces in-range values")
-
-    # ═══════════════════════════════════════════════════════════════
-    # 8. Legacy Compatibility Aliases (std/rand Parity)
-    # ═══════════════════════════════════════════════════════════════
-    let leg_int = rand::rand_int(1, 10)
-    runner_assert(r, leg_int >= 1 and leg_int <= 10, "Legacy alias: rand_int works")
-
-    let leg_shuf = rand::rand_shuffled([10, 20, 30])
-    runner_assert_eq(r, len(leg_shuf), 3, "Legacy alias: rand_shuffled works")
-
-    let leg_ulid = rand::ulid_generate()
-    runner_assert_eq(r, len(leg_ulid), 26, "Legacy alias: ulid_generate works")
 
     let failed = runner_summary(r)
     if failed > 0

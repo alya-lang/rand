@@ -55,15 +55,13 @@ function main()
     say "Weighted Choice:   " + str_from_ptr(rand::weighted_choice(loot, weights))
     say ""
 
-    # 5. Strings and Identifiers
-    say "--- 5. Identifiers & Random Strings ---"
+    # 5. Strings and Bytes
+    say "--- 5. Random Strings & Bytes ---"
     say "Alphanumeric (16): " + rand::alphanumeric(16)
     say "Digits (6 OTP):    " + rand::digits(6)
     say "Hex (16):          " + rand::hex(16)
-    say "UUID v4:           " + rand::uuid_v4()
-    say "UUID v7 (Time):    " + rand::uuid_v7()
-    say "ULID:              " + rand::ulid()
-    say "NanoID (21):       " + rand::nanoid(21)
+    let b = rand::bytes(8)
+    say "Random Bytes (8):  " + str(len(b)) + " bytes generated"
     say ""
     say "Done!"
 end

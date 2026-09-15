@@ -43,32 +43,14 @@ function main()
     end
     bench_stop(runner, "SplitMix64 rng_int 500k calls")
 
-    # 5. UUID v4 Generation
+    # 5. Alphanumeric String Generation
     bench_start(runner, 50000)
-    let u4 = 0
-    while u4 < 50000
-        rand::uuid_v4()
-        u4 += 1
+    let s = 0
+    while s < 50000
+        rand::alphanumeric(16)
+        s += 1
     end
-    bench_stop(runner, "rand::uuid_v4() 50k calls")
-
-    # 6. UUID v7 Generation
-    bench_start(runner, 50000)
-    let u7 = 0
-    while u7 < 50000
-        rand::uuid_v7()
-        u7 += 1
-    end
-    bench_stop(runner, "rand::uuid_v7() 50k calls")
-
-    # 7. NanoID Generation
-    bench_start(runner, 50000)
-    let nid = 0
-    while nid < 50000
-        rand::nanoid(21)
-        nid += 1
-    end
-    bench_stop(runner, "rand::nanoid(21) 50k calls")
+    bench_stop(runner, "rand::alphanumeric(16) 50k calls")
 
     bench_summary(runner)
 end

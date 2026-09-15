@@ -3,11 +3,11 @@ name = "rand"
 version = "0.2.0"
 alya-version = "0.0.12"
 entry = "src/lib.alya"
-description = "Modern, fast pseudo-random number generator (PRNG), statistical distributions, UUID v4/v7, ULID, and sampling toolkit for Alya"
+description = "Modern, fast pseudo-random number generator (PRNG), statistical distributions, and sampling toolkit for Alya"
 authors = ["Alya Language Contributors <https://github.com/alya-lang>"]
 license = "MIT"
 homepage = "https://github.com/alya-lang/alya"
 repository = "https://github.com/alya-lang/rand"
-keywords = ["alya", "alya-lang", "package", "rand", "random", "prng", "uuid", "ulid", "sampling"]
+keywords = ["alya", "alya-lang", "package", "rand", "random", "prng", "sampling"]
 
 [dependencies]
