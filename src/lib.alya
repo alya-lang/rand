@@ -28,11 +28,6 @@ function new(seed = 0, algorithm = 2)
     return rng_new(seed, algorithm)
 end
 
-# Creates a new independent RNG instance
-function new_rng(seed = 0, algorithm = 2)
-    return rng_new(seed, algorithm)
-end
-
 # ═══════════════════════════════════════════════════════════════
 # Top-Level Global Convenience Facade
 # ═══════════════════════════════════════════════════════════════
@@ -63,15 +58,6 @@ function rand_float()
 end
 
 # Generates a random float in range [min_val, max_val)
-function rand_float_range(min_val, max_val)
-    if min_val >= max_val
-        return min_val
-    end
-    let f = rand_float()
-    return min_val + (f * (max_val - min_val))
-end
-
-# Alias for rand_float_range
 function float_range(min_val, max_val)
     if min_val >= max_val
         return min_val
@@ -342,27 +328,11 @@ function rng_int(rng, min_val, max_val)
     return dist_uniform_int(rng, min_val, max_val)
 end
 
-function uniform_int(rng, min_val, max_val)
-    return dist_uniform_int(rng, min_val, max_val)
-end
-
 function rng_float(rng)
     return dist_float(rng)
 end
 
-function rand_rng_float(rng)
-    return dist_float(rng)
-end
-
 function rng_float_range(rng, min_val, max_val)
-    return dist_uniform_float(rng, min_val, max_val)
-end
-
-function rand_rng_float_range(rng, min_val, max_val)
-    return dist_uniform_float(rng, min_val, max_val)
-end
-
-function uniform_float(rng, min_val, max_val)
     return dist_uniform_float(rng, min_val, max_val)
 end
 

@@ -121,23 +121,23 @@ function main()
     # ═══════════════════════════════════════════════════════════════
     # 6. Deterministic Seeding & Multiple Engines
     # ═══════════════════════════════════════════════════════════════
-    let rng_a = rand::new_rng(42, 2) # SplitMix64
-    let val_a1 = rand::uniform_int(rng_a, 1, 1000)
-    let val_a2 = rand::uniform_int(rng_a, 1, 1000)
+    let rng_a = rand::new(42, 2) # SplitMix64
+    let val_a1 = rand::rng_int(rng_a, 1, 1000)
+    let val_a2 = rand::rng_int(rng_a, 1, 1000)
 
-    let rng_b = rand::new_rng(42, 2) # Same seed and algorithm
-    let val_b1 = rand::uniform_int(rng_b, 1, 1000)
-    let val_b2 = rand::uniform_int(rng_b, 1, 1000)
+    let rng_b = rand::new(42, 2) # Same seed and algorithm
+    let val_b1 = rand::rng_int(rng_b, 1, 1000)
+    let val_b2 = rand::rng_int(rng_b, 1, 1000)
 
     runner_assert_eq(r, val_a1, val_b1, "Deterministic PRNG: first value identical with same seed")
     runner_assert_eq(r, val_a2, val_b2, "Deterministic PRNG: second value identical with same seed")
 
-    let rng_xorshift = rand::new_rng(99, 1) # Xorshift64
-    let val_x = rand::uniform_int(rng_xorshift, 1, 100)
+    let rng_xorshift = rand::new(99, 1) # Xorshift64
+    let val_x = rand::rng_int(rng_xorshift, 1, 100)
     runner_assert(r, val_x >= 1 and val_x <= 100, "Xorshift64 engine produces in-range values")
 
-    let rng_pcg = rand::new_rng(123, 3) # PCG32
-    let val_p = rand::uniform_int(rng_pcg, 1, 100)
+    let rng_pcg = rand::new(123, 3) # PCG32
+    let val_p = rand::rng_int(rng_pcg, 1, 100)
     runner_assert(r, val_p >= 1 and val_p <= 100, "PCG32 engine produces in-range values")
 
     let failed = runner_summary(r)
