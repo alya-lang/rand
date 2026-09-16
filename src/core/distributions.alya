@@ -4,7 +4,7 @@
 import "./algorithms.alya"
 
 # Generates a pseudo-random integer in the inclusive range [min_val, max_val]
-function dist_uniform_int(rng, min_val, max_val)
+pub function dist_uniform_int(rng, min_val, max_val)
     if min_val >= max_val
         return min_val
     end
@@ -14,13 +14,13 @@ function dist_uniform_int(rng, min_val, max_val)
 end
 
 # Generates a pseudo-random float in the range [0.0, 1.0)
-function dist_float(rng)
+pub function dist_float(rng)
     let r = rng_next(rng) % 1000000000
     return r / 1000000000.0
 end
 
 # Generates a pseudo-random float in the range [min_val, max_val)
-function dist_uniform_float(rng, min_val, max_val)
+pub function dist_uniform_float(rng, min_val, max_val)
     if min_val >= max_val
         return min_val
     end
@@ -29,7 +29,7 @@ function dist_uniform_float(rng, min_val, max_val)
 end
 
 # Returns 1 with probability p (0.0 <= p <= 1.0), else 0
-function dist_bernoulli(rng, p)
+pub function dist_bernoulli(rng, p)
     if p <= 0.0
         return 0
     end
@@ -45,7 +45,7 @@ function dist_bernoulli(rng, p)
 end
 
 # Simulates n independent Bernoulli trials with success probability p
-function dist_binomial(rng, n, p)
+pub function dist_binomial(rng, n, p)
     if n <= 0 or p <= 0.0
         return 0
     end
@@ -59,7 +59,7 @@ function dist_binomial(rng, n, p)
 end
 
 # Returns 1 if an event with probability 'pct' (0..100) occurs, else 0
-function dist_chance(rng, pct)
+pub function dist_chance(rng, pct)
     if pct <= 0
         return 0
     end
@@ -70,7 +70,7 @@ function dist_chance(rng, pct)
 end
 
 # Generates a normally distributed random float (Gaussian) using Box-Muller transform
-function dist_normal(rng, mean = 0.0, std_dev = 1.0)
+pub function dist_normal(rng, mean = 0.0, std_dev = 1.0)
     let r1 = rng_next(rng) % 1000000000
     if r1 <= 0
         r1 = 1
@@ -88,7 +88,7 @@ function dist_normal(rng, mean = 0.0, std_dev = 1.0)
 end
 
 # Generates an exponentially distributed random float with given rate (lambda)
-function dist_exponential(rng, rate = 1.0)
+pub function dist_exponential(rng, rate = 1.0)
     if rate <= 0.0
         return 0.0
     end
@@ -101,7 +101,7 @@ function dist_exponential(rng, rate = 1.0)
 end
 
 # Simulates rolling an n-sided die (returns integer in 1..sides)
-function dist_die_roll(rng, sides = 6)
+pub function dist_die_roll(rng, sides = 6)
     if sides <= 1
         return 1
     end

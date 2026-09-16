@@ -4,7 +4,7 @@
 import "./distributions.alya"
 
 # Generates a random string of length 'n' from provided charset
-function str_random(rng, n, charset)
+pub function str_random(rng, n, charset)
     let clen = len(charset)
     if clen == 0 or n <= 0
         return ""
@@ -13,44 +13,44 @@ function str_random(rng, n, charset)
     let i = 0
     while i < n
         let idx = dist_uniform_int(rng, 0, clen - 1)
-        res = res + char_at(charset, idx)
+        res += char_at(charset, idx)
         i += 1
     end
     return res
 end
 
 # Generates a random alphanumeric string of length 'n' ([a-zA-Z0-9])
-function str_alphanumeric(rng, n)
+pub function str_alphanumeric(rng, n)
     let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     return str_random(rng, n, chars)
 end
 
 # Generates a random numeric digits string of length 'n' ([0-9])
-function str_digits(rng, n)
+pub function str_digits(rng, n)
     let digits = "0123456789"
     return str_random(rng, n, digits)
 end
 
 # Generates a random lowercase hexadecimal string of length 'n' ([0-9a-f])
-function str_hex(rng, n)
+pub function str_hex(rng, n)
     let hex = "0123456789abcdef"
     return str_random(rng, n, hex)
 end
 
 # Generates a random uppercase hexadecimal string of length 'n' ([0-9A-F])
-function str_hex_upper(rng, n)
+pub function str_hex_upper(rng, n)
     let hex = "0123456789ABCDEF"
     return str_random(rng, n, hex)
 end
 
 # Generates a random printable ASCII string of length 'n' (ASCII 33 to 126)
-function str_ascii(rng, n)
+pub function str_ascii(rng, n)
     let chars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ bcdefghijklmnopqrstuvwxyz{|}~"
     return str_random(rng, n, chars)
 end
 
 # Generates an array of 'count' random byte integers (0..255)
-function str_bytes(rng, count)
+pub function str_bytes(rng, count)
     let bytes_arr = []
     let i = 0
     while i < count

@@ -140,6 +140,22 @@ function main()
     let val_p = rand::rng_int(rng_pcg, 1, 100)
     runner_assert(r, val_p >= 1 and val_p <= 100, "PCG32 engine produces in-range values")
 
+    # ═══════════════════════════════════════════════════════════════
+    # 7. Idiomatic Rng Struct Methods & RngAlgorithm Enum
+    # ═══════════════════════════════════════════════════════════════
+    let rng_m = rand::new(777, rand::RngAlgorithm.SplitMix64)
+    let m_int = rng_m.int(10, 50)
+    runner_assert(r, m_int >= 10 and m_int <= 50, "rng.int() struct method works")
+
+    let m_flt = rng_m.next_float()
+    runner_assert(r, m_flt >= 0.0 and m_flt < 1.0, "rng.next_float() struct method works")
+
+    let m_choice = rng_m.choice(["x", "y", "z"])
+    runner_assert(r, m_choice in ["x", "y", "z"], "rng.choice() struct method and 'in' operator work")
+
+    let m_bytes = rng_m.bytes(4)
+    runner_assert_eq(r, len(m_bytes), 4, "rng.bytes() struct method works")
+
     let failed = runner_summary(r)
     if failed > 0
         exit(1)
