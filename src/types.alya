@@ -9,7 +9,6 @@ pub enum RngAlgorithm
     Lcg = 4
 end
 
-
 # Pseudo-Random Number Generator State
 pub struct Rng
     algorithm,
