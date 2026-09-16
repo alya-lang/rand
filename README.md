@@ -84,7 +84,7 @@ function main()
     let raw_bytes = rand::bytes(16)
 
     # 4. Deterministic RNG with Seed
-    let rng = rand::new(42, rand::ALG_SPLITMIX64)
+    let rng = rand::new(42, rand::RngAlgorithm.SplitMix64)
     let val = rand::rng_int(rng, 1, 10)
 end
 
@@ -135,17 +135,17 @@ main()
 
 ### Deterministic PRNG Engines
 
-| Algorithm Constant | Value | Description |
+| Algorithm Enum Variant | Value | Description |
 |---|---|---|
-| `ALG_XORSHIFT64` | `1` | Ultra-fast 64-bit shift-register generator (Marsaglia). |
-| `ALG_SPLITMIX64` | `2` | High-quality 64-bit generator with excellent state avalanche (Default). |
-| `ALG_PCG32` | `3` | Permuted Congruential Generator (O'Neill). |
-| `ALG_LCG` | `4` | Linear Congruential Generator. |
+| `RngAlgorithm.XorShift64` | `1` | Ultra-fast 64-bit shift-register generator (Marsaglia). |
+| `RngAlgorithm.SplitMix64` | `2` | High-quality 64-bit generator with excellent state avalanche (Default). |
+| `RngAlgorithm.Pcg32` | `3` | Permuted Congruential Generator (O'Neill). |
+| `RngAlgorithm.Lcg` | `4` | Linear Congruential Generator. |
 
 Use `new(seed, algorithm)` to instantiate an independent RNG:
 
 ```alya
-let rng = rand::new(12345, rand::ALG_XORSHIFT64)
+let rng = rand::new(12345, rand::RngAlgorithm.XorShift64)
 let r_int = rand::rng_int(rng, 1, 100)
 let r_flt = rand::rng_float(rng)
 ```

@@ -9,11 +9,6 @@ pub enum RngAlgorithm
     Lcg = 4
 end
 
-# PRNG Algorithm Selectors (Backward Compatible)
-pub let ALG_XORSHIFT64 = 1
-pub let ALG_SPLITMIX64 = 2
-pub let ALG_PCG32      = 3
-pub let ALG_LCG        = 4
 
 # Pseudo-Random Number Generator State
 pub struct Rng

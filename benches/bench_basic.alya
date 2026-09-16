@@ -24,7 +24,7 @@ function main()
     bench_stop(runner, "rand::int(1, 100) 500k calls")
 
     # 3. Dedicated Xorshift64 Instance
-    let rng_xor = rand::new(12345, rand::ALG_XORSHIFT64)
+    let rng_xor = rand::new(12345, rand::RngAlgorithm.XorShift64)
     bench_start(runner, 500000)
     let k = 0
     while k < 500000
@@ -34,7 +34,7 @@ function main()
     bench_stop(runner, "Xorshift64 rng_int 500k calls")
 
     # 4. Dedicated SplitMix64 Instance
-    let rng_sm = rand::new(12345, rand::ALG_SPLITMIX64)
+    let rng_sm = rand::new(12345, rand::RngAlgorithm.SplitMix64)
     bench_start(runner, 500000)
     let m = 0
     while m < 500000
