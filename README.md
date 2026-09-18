@@ -56,8 +56,8 @@ rand = { git = "https://github.com/alya-lang/rand", branch = "main" }
 Or install it directly using the Alya package CLI:
 
 ```bash
-alyac add rand --git https://github.com/alya-lang/rand --branch main
-alyac install
+alya add rand --git https://github.com/alya-lang/rand --branch main
+alya install
 ```
 
 ---
@@ -154,22 +154,22 @@ let r_flt = rand::rng_float(rng)
 
 ## 🧪 Running Tests & Benchmarks
 
-Run the test suite using `alyac`:
+Run the test suite using `alya`:
 
 ```bash
-alyac run tests/test_basic.alya
+alya run tests/test_basic.alya
 ```
 
 Run the benchmark suite:
 
 ```bash
-alyac run benches/bench_basic.alya
+alya run benches/bench_basic.alya
 ```
 
 Run the example demo:
 
 ```bash
-alyac run examples/demo.alya
+alya run examples/demo.alya
 ```
 
 ---
@@ -181,13 +181,13 @@ Contributions are welcome! Please follow these steps:
 1. Fork the repository and clone it locally
 2. Install dependencies:
    ```bash
-   alyac install
+   alya install
    ```
 3. Create your feature branch (`git checkout -b feature/my-feature`)
 4. Verify tests and formatting before opening a PR:
    ```bash
-   alyac test
-   alyac fmt . --check
+   alya test
+   alya fmt . --check
    ```
 5. Commit your changes (`git commit -m "feat: add feature"`) and open a Pull Request
 
