@@ -24,7 +24,7 @@ pub function auto_seed()
 end
 
 # Creates a new independent RNG instance
-pub function new(seed = 0, algorithm = 2)
+pub function new(seed = 0, algorithm = 2) -> Rng
     return rng_new(seed, algorithm)
 end
 
@@ -162,7 +162,7 @@ pub function choice(arr)
 end
 
 # Selects 'count' elements from array with replacement
-pub function choices(arr, count)
+pub function choices(arr, count) -> array
     let n = len(arr)
     if count <= 0 or n == 0
         return []
@@ -177,7 +177,7 @@ pub function choices(arr, count)
 end
 
 # In-place Fisher-Yates shuffle
-pub function shuffle(arr)
+pub function shuffle(arr) -> array
     let n = len(arr)
     let i = n - 1
     while i > 0
@@ -191,7 +191,7 @@ pub function shuffle(arr)
 end
 
 # Returns a new shuffled copy of array
-pub function shuffled(arr)
+pub function shuffled(arr) -> array
     let copy = []
     for item in arr
         copy.push(item)
@@ -200,7 +200,7 @@ pub function shuffled(arr)
 end
 
 # Samples 'count' unique elements from array without replacement
-pub function sample(arr, count)
+pub function sample(arr, count) -> array
     let n = len(arr)
     if count <= 0 or n == 0
         return []

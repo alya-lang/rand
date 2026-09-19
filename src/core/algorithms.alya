@@ -22,7 +22,7 @@ function algo_auto_seed()
 end
 
 # Creates and initializes a new RNG instance
-pub function rng_new(seed = 0, algorithm = 2)
+pub function rng_new(seed = 0, algorithm = 2) -> Rng
     if seed == 0
         seed = algo_auto_seed()
     end
