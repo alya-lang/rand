@@ -330,7 +330,7 @@ pub function ascii(n)
 end
 
 ## Generates an array of count random byte integers (0..255).
-pub function bytes(count)
+pub function bytes(count) -> array
     let bytes_arr = []
     let i = 0
     while i < count
@@ -400,22 +400,22 @@ pub function rng_choice(rng, arr)
 end
 
 ## Selects count elements from array arr with replacement using the given RNG instance.
-pub function rng_choices(rng, arr, count)
+pub function rng_choices(rng, arr, count) -> array
     return sample_choices(rng, arr, count)
 end
 
 ## Performs an in-place Fisher-Yates shuffle on array arr using the given RNG instance.
-pub function rng_shuffle(rng, arr)
+pub function rng_shuffle(rng, arr) -> array
     return sample_shuffle(rng, arr)
 end
 
 ## Returns a new shuffled copy of array arr using the given RNG instance.
-pub function rng_shuffled(rng, arr)
+pub function rng_shuffled(rng, arr) -> array
     return sample_shuffled(rng, arr)
 end
 
 ## Samples count distinct elements from array arr without replacement using the given RNG instance.
-pub function rng_sample(rng, arr, count)
+pub function rng_sample(rng, arr, count) -> array
     return sample_sample(rng, arr, count)
 end
 
@@ -425,7 +425,7 @@ pub function rng_weighted_choice(rng, items, weights)
 end
 
 ## Generates an array of count random byte integers (0..255) using the given RNG instance.
-pub function rng_bytes(rng, count)
+pub function rng_bytes(rng, count) -> array
     return str_bytes(rng, count)
 end
 
@@ -534,22 +534,22 @@ pub function Rng.choice(self, arr)
 end
 
 ## Selects count elements from array arr with replacement.
-pub function Rng.choices(self, arr, count)
+pub function Rng.choices(self, arr, count) -> array
     return rng_choices(self, arr, count)
 end
 
 ## Performs an in-place Fisher-Yates shuffle on array arr.
-pub function Rng.shuffle(self, arr)
+pub function Rng.shuffle(self, arr) -> array
     return rng_shuffle(self, arr)
 end
 
 ## Returns a new shuffled copy of array arr.
-pub function Rng.shuffled(self, arr)
+pub function Rng.shuffled(self, arr) -> array
     return rng_shuffled(self, arr)
 end
 
 ## Samples count distinct elements from array arr without replacement.
-pub function Rng.sample(self, arr, count)
+pub function Rng.sample(self, arr, count) -> array
     return rng_sample(self, arr, count)
 end
 
@@ -559,6 +559,6 @@ pub function Rng.weighted_choice(self, items, weights)
 end
 
 ## Generates an array of count random byte integers (0..255).
-pub function Rng.bytes(self, count)
+pub function Rng.bytes(self, count) -> array
     return rng_bytes(self, count)
 end

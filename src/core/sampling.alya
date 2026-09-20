@@ -19,7 +19,7 @@ pub function sample_choice(rng, arr)
 end
 
 ## Performs an in-place Fisher-Yates shuffle of array arr.
-pub function sample_shuffle(rng, arr)
+pub function sample_shuffle(rng, arr) -> array
     let n = len(arr)
     if n <= 1
         return arr
@@ -41,7 +41,7 @@ pub function sample_shuffle(rng, arr)
 end
 
 ## Returns a new shuffled copy of array arr.
-pub function sample_shuffled(rng, arr)
+pub function sample_shuffled(rng, arr) -> array
     let copy = []
     for item in arr
         copy.push(item)
@@ -50,7 +50,7 @@ pub function sample_shuffled(rng, arr)
 end
 
 ## Returns count randomly sampled distinct elements from arr without replacement.
-pub function sample_sample(rng, arr, count)
+pub function sample_sample(rng, arr, count) -> array
     let n = len(arr)
     if count <= 0 or n == 0
         return []
@@ -71,7 +71,7 @@ pub function sample_sample(rng, arr, count)
 end
 
 ## Returns count elements chosen randomly from arr with replacement.
-pub function sample_choices(rng, arr, count)
+pub function sample_choices(rng, arr, count) -> array
     let n = len(arr)
     if count <= 0 or n == 0
         return []

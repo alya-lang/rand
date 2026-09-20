@@ -50,7 +50,7 @@ pub function str_ascii(rng, n)
 end
 
 ## Generates an array of count random byte integers (0..255).
-pub function str_bytes(rng, count)
+pub function str_bytes(rng, count) -> array
     let bytes_arr = []
     let i = 0
     while i < count
