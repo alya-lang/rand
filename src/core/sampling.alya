@@ -57,8 +57,7 @@ pub function sample_sample(rng, arr, count) -> array
         return []
     end
     if count >= n
-        let shuf = sample_shuffled(rng, arr)
-        return shuf
+        return sample_shuffled(rng, arr)
     end
     let pool = sample_shuffled(rng, arr)
     let pool_len = len(pool)

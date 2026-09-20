@@ -231,8 +231,7 @@ pub function sample(arr, count) -> array
         return []
     end
     if count >= n
-        let shuf = shuffled(arr)
-        return shuf
+        return shuffled(arr)
     end
     let pool = shuffled(arr)
     let pool_len = len(pool)
