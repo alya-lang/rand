@@ -220,7 +220,8 @@ pub function shuffled(arr) -> array
     for item in arr
         copy.push(item)
     end
-    return shuffle(copy)
+    shuffle(copy)
+    return copy
 end
 
 ## Samples count distinct elements from array arr without replacement.
@@ -230,7 +231,8 @@ pub function sample(arr, count) -> array
         return []
     end
     if count >= n
-        return shuffled(arr)
+        let shuf = shuffled(arr)
+        return shuf
     end
     let pool = shuffled(arr)
     let pool_len = len(pool)
