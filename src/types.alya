@@ -1,7 +1,7 @@
 # Types and data structures for rand
 # Part of the Alya Language package ecosystem (https://github.com/alya-lang)
 
-# Public enumeration for PRNG engine algorithms (exported via pub)
+## PRNG engine algorithms supported by the rand package.
 pub enum RngAlgorithm
     XorShift64 = 1,
     SplitMix64 = 2,
@@ -9,7 +9,7 @@ pub enum RngAlgorithm
     Lcg = 4
 end
 
-# Pseudo-Random Number Generator State
+## Pseudo-Random Number Generator state and configuration container.
 pub struct Rng
     algorithm,
     state0,
@@ -17,7 +17,7 @@ pub struct Rng
     inc
 end
 
-# Weighted item structure for weighted choice selections
+## Weighted item structure for weighted choice selections.
 pub struct WeightedItem
     item,
     weight

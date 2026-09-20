@@ -156,6 +156,54 @@ function main()
     let m_bytes = rng_m.bytes(4)
     runner_assert_eq(r, len(m_bytes), 4, "rng.bytes() struct method works")
 
+    let m_choices = rng_m.choices(["red", "blue"], 3)
+    runner_assert_eq(r, len(m_choices), 3, "rng.choices() struct method works")
+
+    let m_sample = rng_m.sample(["red", "green", "blue"], 2)
+    runner_assert_eq(r, len(m_sample), 2, "rng.sample() struct method works")
+
+    let m_shuffled = rng_m.shuffled([10, 20, 30])
+    runner_assert_eq(r, len(m_shuffled), 3, "rng.shuffled() struct method works")
+
+    let m_weighted = rng_m.weighted_choice(["gold", "silver"], [100, 0])
+    runner_assert_str_eq(r, m_weighted, "gold", "rng.weighted_choice() struct method works")
+
+    let m_die = rng_m.die(12)
+    runner_assert(r, m_die >= 1 and m_die <= 12, "rng.die() struct method works")
+
+    let m_bern = rng_m.bernoulli(1.0)
+    runner_assert_eq(r, m_bern, 1, "rng.bernoulli() struct method works")
+
+    let m_bin = rng_m.binomial(4, 1.0)
+    runner_assert_eq(r, m_bin, 4, "rng.binomial() struct method works")
+
+    let m_chance = rng_m.chance(100)
+    runner_assert_eq(r, m_chance, 1, "rng.chance() struct method works")
+
+    # ═══════════════════════════════════════════════════════════════
+    # 8. Instance Helpers for Strings and Distributions
+    # ═══════════════════════════════════════════════════════════════
+    let h_alpha = rand::rng_alphanumeric(test_rng, 12)
+    runner_assert_eq(r, len(h_alpha), 12, "rand::rng_alphanumeric generates 12 chars")
+
+    let h_digits = rand::rng_digits(test_rng, 8)
+    runner_assert_eq(r, len(h_digits), 8, "rand::rng_digits generates 8 digits")
+
+    let h_hex = rand::rng_hex(test_rng, 6)
+    runner_assert_eq(r, len(h_hex), 6, "rand::rng_hex generates 6 chars")
+
+    let h_hex_up = rand::rng_hex_upper(test_rng, 6)
+    runner_assert_eq(r, len(h_hex_up), 6, "rand::rng_hex_upper generates 6 chars")
+
+    let h_str = rand::rng_str_random(test_rng, 5, "ABC")
+    runner_assert_eq(r, len(h_str), 5, "rand::rng_str_random generates custom string")
+
+    let h_choices = rand::rng_choices(test_rng, ["x", "y"], 4)
+    runner_assert_eq(r, len(h_choices), 4, "rand::rng_choices selects 4 elements")
+
+    let h_sample = rand::rng_sample(test_rng, ["x", "y", "z"], 2)
+    runner_assert_eq(r, len(h_sample), 2, "rand::rng_sample samples 2 elements")
+
     let failed = runner_summary(r)
     if failed > 0
         exit(1)

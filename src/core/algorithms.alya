@@ -21,7 +21,7 @@ function algo_auto_seed()
     return s
 end
 
-# Creates and initializes a new RNG instance
+## Creates and initializes a new RNG instance with the specified seed and algorithm.
 pub function rng_new(seed = 0, algorithm = 2) -> Rng
     if seed == 0
         seed = algo_auto_seed()
@@ -93,7 +93,7 @@ function _lcg_next(rng)
     return s
 end
 
-# Advances RNG and returns a non-negative pseudo-random integer in [0, 2147483647]
+## Advances RNG state and returns a non-negative pseudo-random integer in [0, 2147483647].
 pub function rng_next(rng)
     let raw = 0
     when rng.algorithm
@@ -111,7 +111,7 @@ pub function rng_next(rng)
     return bit_and(raw, 2147483647)
 end
 
-# Generates random bits in range [0, 2^bits - 1] (bits <= 60)
+## Generates random bits in range [0, 2^bits - 1] (bits <= 60).
 pub function rng_next_bits(rng, bits)
     if bits <= 0
         return 0

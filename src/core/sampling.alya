@@ -3,7 +3,7 @@
 
 import "./distributions.alya"
 
-# Returns a randomly selected element from array
+## Returns a randomly selected element from array arr.
 pub function sample_choice(rng, arr)
     let n = len(arr)
     if n == 0
@@ -13,7 +13,7 @@ pub function sample_choice(rng, arr)
     return arr[idx]
 end
 
-# In-place Fisher-Yates shuffle of array 'arr'
+## Performs an in-place Fisher-Yates shuffle of array arr.
 pub function sample_shuffle(rng, arr)
     let n = len(arr)
     let i = n - 1
@@ -27,7 +27,7 @@ pub function sample_shuffle(rng, arr)
     return arr
 end
 
-# Returns a new shuffled copy of array 'arr'
+## Returns a new shuffled copy of array arr.
 pub function sample_shuffled(rng, arr)
     let copy = []
     for item in arr
@@ -36,7 +36,7 @@ pub function sample_shuffled(rng, arr)
     return sample_shuffle(rng, copy)
 end
 
-# Returns 'count' randomly sampled distinct elements from 'arr' (without replacement)
+## Returns count randomly sampled distinct elements from arr without replacement.
 pub function sample_sample(rng, arr, count)
     let n = len(arr)
     if count <= 0 or n == 0
@@ -55,7 +55,7 @@ pub function sample_sample(rng, arr, count)
     return res
 end
 
-# Returns 'count' elements chosen from 'arr' with replacement
+## Returns count elements chosen randomly from arr with replacement.
 pub function sample_choices(rng, arr, count)
     let n = len(arr)
     if count <= 0 or n == 0
@@ -70,7 +70,7 @@ pub function sample_choices(rng, arr, count)
     return res
 end
 
-# Returns an item chosen randomly according to relative non-negative weights
+## Returns an item chosen randomly according to relative non-negative weights using roulette selection.
 pub function sample_weighted_choice(rng, items, weights)
     let n = len(items)
     if n == 0

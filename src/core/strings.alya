@@ -3,7 +3,7 @@
 
 import "./distributions.alya"
 
-# Generates a random string of length 'n' from provided charset
+## Generates a random string of length n from the provided charset.
 pub function str_random(rng, n, charset)
     let clen = len(charset)
     if clen == 0 or n <= 0
@@ -19,37 +19,37 @@ pub function str_random(rng, n, charset)
     return res
 end
 
-# Generates a random alphanumeric string of length 'n' ([a-zA-Z0-9])
+## Generates a random alphanumeric string of length n ([a-zA-Z0-9]).
 pub function str_alphanumeric(rng, n)
     let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     return str_random(rng, n, chars)
 end
 
-# Generates a random numeric digits string of length 'n' ([0-9])
+## Generates a random numeric digits string of length n ([0-9]).
 pub function str_digits(rng, n)
     let digits = "0123456789"
     return str_random(rng, n, digits)
 end
 
-# Generates a random lowercase hexadecimal string of length 'n' ([0-9a-f])
+## Generates a random lowercase hexadecimal string of length n ([0-9a-f]).
 pub function str_hex(rng, n)
     let hex = "0123456789abcdef"
     return str_random(rng, n, hex)
 end
 
-# Generates a random uppercase hexadecimal string of length 'n' ([0-9A-F])
+## Generates a random uppercase hexadecimal string of length n ([0-9A-F]).
 pub function str_hex_upper(rng, n)
     let hex = "0123456789ABCDEF"
     return str_random(rng, n, hex)
 end
 
-# Generates a random printable ASCII string of length 'n' (ASCII 33 to 126)
+## Generates a random printable ASCII string of length n (ASCII 33 to 126).
 pub function str_ascii(rng, n)
-    let chars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ bcdefghijklmnopqrstuvwxyz{|}~"
+    let chars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ abcdefghijklmnopqrstuvwxyz{|}~"
     return str_random(rng, n, chars)
 end
 
-# Generates an array of 'count' random byte integers (0..255)
+## Generates an array of count random byte integers (0..255).
 pub function str_bytes(rng, count)
     let bytes_arr = []
     let i = 0

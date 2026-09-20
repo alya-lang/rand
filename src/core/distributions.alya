@@ -3,7 +3,7 @@
 
 import "./algorithms.alya"
 
-# Generates a pseudo-random integer in the inclusive range [min_val, max_val]
+## Generates a pseudo-random integer in the inclusive range [min_val, max_val].
 pub function dist_uniform_int(rng, min_val, max_val)
     if min_val >= max_val
         return min_val
@@ -13,13 +13,13 @@ pub function dist_uniform_int(rng, min_val, max_val)
     return min_val + (r % range)
 end
 
-# Generates a pseudo-random float in the range [0.0, 1.0)
+## Generates a pseudo-random float in the half-open range [0.0, 1.0).
 pub function dist_float(rng)
     let r = rng_next(rng) % 1000000000
     return r / 1000000000.0
 end
 
-# Generates a pseudo-random float in the range [min_val, max_val)
+## Generates a pseudo-random float in the half-open range [min_val, max_val).
 pub function dist_uniform_float(rng, min_val, max_val)
     if min_val >= max_val
         return min_val
@@ -28,7 +28,7 @@ pub function dist_uniform_float(rng, min_val, max_val)
     return min_val + (f * (max_val - min_val))
 end
 
-# Returns 1 with probability p (0.0 <= p <= 1.0), else 0
+## Returns 1 with probability p (0.0 <= p <= 1.0), else 0.
 pub function dist_bernoulli(rng, p)
     if p <= 0.0
         return 0
@@ -44,7 +44,7 @@ pub function dist_bernoulli(rng, p)
     end
 end
 
-# Simulates n independent Bernoulli trials with success probability p
+## Simulates n independent Bernoulli trials with success probability p.
 pub function dist_binomial(rng, n, p)
     if n <= 0 or p <= 0.0
         return 0
@@ -58,7 +58,7 @@ pub function dist_binomial(rng, n, p)
     return successes
 end
 
-# Returns 1 if an event with probability 'pct' (0..100) occurs, else 0
+## Returns 1 if an event with probability pct (0..100) occurs, else 0.
 pub function dist_chance(rng, pct)
     if pct <= 0
         return 0
@@ -69,7 +69,7 @@ pub function dist_chance(rng, pct)
     return (rng_next(rng) % 100) < pct
 end
 
-# Generates a normally distributed random float (Gaussian) using Box-Muller transform
+## Generates a normally distributed random float (Gaussian) using Box-Muller transform.
 pub function dist_normal(rng, mean = 0.0, std_dev = 1.0)
     let r1 = rng_next(rng) % 1000000000
     if r1 <= 0
@@ -87,7 +87,7 @@ pub function dist_normal(rng, mean = 0.0, std_dev = 1.0)
     return mean + (z0 * std_dev)
 end
 
-# Generates an exponentially distributed random float with given rate (lambda)
+## Generates an exponentially distributed random float with given rate (lambda).
 pub function dist_exponential(rng, rate = 1.0)
     if rate <= 0.0
         return 0.0
@@ -100,7 +100,7 @@ pub function dist_exponential(rng, rate = 1.0)
     return (0.0 - native_log(1.0 - u)) / (rate * 1.0)
 end
 
-# Simulates rolling an n-sided die (returns integer in 1..sides)
+## Simulates rolling an n-sided die (returns an integer in 1..sides).
 pub function dist_die_roll(rng, sides = 6)
     if sides <= 1
         return 1
