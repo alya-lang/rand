@@ -9,8 +9,19 @@ pub function dist_uniform_int(rng, min_val, max_val)
         return min_val
     end
     let r = rng_next(rng)
+    if r < 0
+        r = 0 - r
+    end
     let range = (max_val - min_val) + 1
-    return min_val + (r % range)
+    let rem = r % range
+    if rem < 0
+        rem = 0 - rem
+    end
+    let res = min_val + rem
+    if res > max_val
+        res = max_val
+    end
+    return res
 end
 
 ## Generates a pseudo-random float in the half-open range [0.0, 1.0).

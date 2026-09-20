@@ -47,8 +47,19 @@ pub function int(min_val, max_val)
         return min_val
     end
     let r = next()
+    if r < 0
+        r = 0 - r
+    end
     let range = (max_val - min_val) + 1
-    return min_val + (r % range)
+    let rem = r % range
+    if rem < 0
+        rem = 0 - rem
+    end
+    let res = min_val + rem
+    if res > max_val
+        res = max_val
+    end
+    return res
 end
 
 ## Generates a random float in the half-open range [0.0, 1.0).
@@ -158,6 +169,11 @@ pub function choice(arr)
         return null
     end
     let idx = int(0, n - 1)
+    if idx < 0
+        idx = 0
+    elif idx >= n
+        idx = n - 1
+    end
     return arr[idx]
 end
 
@@ -179,9 +195,17 @@ end
 ## Performs an in-place Fisher-Yates shuffle on array arr.
 pub function shuffle(arr) -> array
     let n = len(arr)
+    if n <= 1
+        return arr
+    end
     let i = n - 1
     while i > 0
         let j = int(0, i)
+        if j < 0
+            j = 0
+        elif j > i
+            j = i
+        end
         let temp = arr[i]
         arr[i] = arr[j]
         arr[j] = temp
@@ -209,9 +233,11 @@ pub function sample(arr, count) -> array
         return shuffled(arr)
     end
     let pool = shuffled(arr)
+    let pool_len = len(pool)
+    let limit = if count < pool_len then count else pool_len
     let res = []
     let i = 0
-    while i < count
+    while i < limit
         res.push(pool[i])
         i += 1
     end
