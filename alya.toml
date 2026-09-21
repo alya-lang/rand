@@ -11,3 +11,7 @@ repository = "https://github.com/alya-lang/rand"
 keywords = ["alya", "alya-lang", "package", "rand", "random", "prng", "sampling"]
 
 [dependencies]
+
+# [lint]
+# disabled_rules = []
+# exclude = []
