@@ -1,6 +1,8 @@
-# Modern, fast pseudo-random number generator (PRNG), statistical distributions,
-# and sampling toolkit for Alya
-# Part of the Alya Language package ecosystem (https://github.com/alya-lang)
+## # rand
+##
+## Modern, fast pseudo-random number generator (PRNG), statistical distributions,
+## and sampling toolkit for Alya.
+## Part of the Alya Language package ecosystem (https://github.com/alya-lang).
 
 import "./types.alya"
 import "./core/algorithms.alya"
@@ -13,7 +15,7 @@ import "./core/strings.alya"
 # ═══════════════════════════════════════════════════════════════
 
 ## Seeds the global PRNG with an integer seed.
-pub function seed(s)
+pub function seed(s: int)
     rand_seed(s)
 end
 
@@ -24,7 +26,7 @@ pub function auto_seed()
 end
 
 ## Creates a new independent RNG instance with an optional seed and algorithm.
-pub function new(seed = 0, algorithm = 2) -> Rng
+pub function new(seed: int = 0, algorithm: int = 2) -> Rng
     return rng_new(seed, algorithm)
 end
 
@@ -33,7 +35,7 @@ end
 # ═══════════════════════════════════════════════════════════════
 
 ## Generates a pseudo-random non-negative integer in [0, 2147483647] using the global PRNG.
-pub function next()
+pub function next() -> int
     let r = rand()
     if r < 0
         r = 0 - r
@@ -42,7 +44,7 @@ pub function next()
 end
 
 ## Generates a random integer in the inclusive range [min_val, max_val].
-pub function int(min_val, max_val)
+pub function int(min_val: int, max_val: int) -> int
     if min_val >= max_val
         return min_val
     end
@@ -63,13 +65,13 @@ pub function int(min_val, max_val)
 end
 
 ## Generates a random float in the half-open range [0.0, 1.0).
-pub function rand_float()
+pub function rand_float() -> float
     let r = next() % 1000000000
     return r / 1000000000.0
 end
 
 ## Generates a random float in the half-open range [min_val, max_val).
-pub function float_range(min_val, max_val)
+pub function float_range(min_val, max_val) -> float
     if min_val >= max_val
         return min_val
     end
@@ -78,12 +80,12 @@ pub function float_range(min_val, max_val)
 end
 
 ## Returns 1 or 0 with 50% probability.
-pub function bool()
+pub function bool() -> int
     return next() % 2
 end
 
 ## Returns 1 if an event with percentage pct (0..100) occurs, else 0.
-pub function chance(pct)
+pub function chance(pct: int) -> int
     if pct <= 0
         return 0
     end
@@ -94,7 +96,7 @@ pub function chance(pct)
 end
 
 ## Simulates a Bernoulli trial with success probability p (0.0 <= p <= 1.0).
-pub function bernoulli(p)
+pub function bernoulli(p) -> int
     if p <= 0.0
         return 0
     end
@@ -110,7 +112,7 @@ pub function bernoulli(p)
 end
 
 ## Simulates a Binomial experiment with n trials and success probability p.
-pub function binomial(n, p)
+pub function binomial(n: int, p) -> int
     if n <= 0 or p <= 0.0
         return 0
     end
@@ -124,7 +126,7 @@ pub function binomial(n, p)
 end
 
 ## Generates a normally distributed random float (Gaussian) using Box-Muller transform.
-pub function normal(mean = 0.0, std_dev = 1.0)
+pub function normal(mean = 0.0, std_dev = 1.0) -> float
     let r1 = next() % 1000000000
     if r1 <= 0
         r1 = 1
@@ -142,7 +144,7 @@ pub function normal(mean = 0.0, std_dev = 1.0)
 end
 
 ## Generates an exponentially distributed random float with given rate (lambda).
-pub function exponential(rate = 1.0)
+pub function exponential(rate = 1.0) -> float
     if rate <= 0.0
         return 0.0
     end
@@ -155,7 +157,7 @@ pub function exponential(rate = 1.0)
 end
 
 ## Simulates rolling an n-sided die (returns integer in 1..sides).
-pub function die(sides = 6)
+pub function die(sides: int = 6) -> int
     if sides <= 1
         return 1
     end
@@ -163,7 +165,7 @@ pub function die(sides = 6)
 end
 
 ## Selects a single randomly chosen element from array arr.
-pub function choice(arr)
+pub function choice(arr: array)
     let n = len(arr)
     if n == 0
         return null
@@ -178,7 +180,7 @@ pub function choice(arr)
 end
 
 ## Selects count elements from array arr with replacement.
-pub function choices(arr, count) -> array
+pub function choices(arr: array, count: int) -> array
     let n = len(arr)
     if count <= 0 or n == 0
         return []
@@ -193,7 +195,7 @@ pub function choices(arr, count) -> array
 end
 
 ## Performs an in-place Fisher-Yates shuffle on array arr.
-pub function shuffle(arr) -> array
+pub function shuffle(arr: array) -> array
     let n = len(arr)
     if n <= 1
         return arr
@@ -215,7 +217,7 @@ pub function shuffle(arr) -> array
 end
 
 ## Returns a new shuffled copy of array arr.
-pub function shuffled(arr) -> array
+pub function shuffled(arr: array) -> array
     let copy = []
     for item in arr
         copy.push(item)
@@ -225,7 +227,7 @@ pub function shuffled(arr) -> array
 end
 
 ## Samples count distinct elements from array arr without replacement.
-pub function sample(arr, count) -> array
+pub function sample(arr: array, count: int) -> array
     let n = len(arr)
     if count <= 0 or n == 0
         return []
@@ -246,7 +248,7 @@ pub function sample(arr, count) -> array
 end
 
 ## Selects an item from items according to relative non-negative weights.
-pub function weighted_choice(items, weights)
+pub function weighted_choice(items: array, weights: array)
     let n = len(items)
     if n == 0
         return null
@@ -285,7 +287,7 @@ pub function weighted_choice(items, weights)
 end
 
 ## Generates a random string of length n from custom charset.
-pub function string(n, charset)
+pub function string(n: int, charset: string) -> string
     let clen = len(charset)
     if clen == 0 or n <= 0
         return ""
@@ -301,37 +303,37 @@ pub function string(n, charset)
 end
 
 ## Generates an alphanumeric string of length n ([a-zA-Z0-9]).
-pub function alphanumeric(n)
+pub function alphanumeric(n: int) -> string
     let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     return string(n, chars)
 end
 
 ## Generates a numeric digits string of length n ([0-9]).
-pub function digits(n)
+pub function digits(n: int) -> string
     let digs = "0123456789"
     return string(n, digs)
 end
 
 ## Generates a lowercase hexadecimal string of length n ([0-9a-f]).
-pub function hex(n)
+pub function hex(n: int) -> string
     let h = "0123456789abcdef"
     return string(n, h)
 end
 
 ## Generates an uppercase hexadecimal string of length n ([0-9A-F]).
-pub function hex_upper(n)
+pub function hex_upper(n: int) -> string
     let h = "0123456789ABCDEF"
     return string(n, h)
 end
 
 ## Generates a printable ASCII string of length n.
-pub function ascii(n)
+pub function ascii(n: int) -> string
     let chars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ abcdefghijklmnopqrstuvwxyz{|}~"
     return string(n, chars)
 end
 
 ## Generates an array of count random byte integers (0..255).
-pub function bytes(count) -> array
+pub function bytes(count: int) -> array
     let bytes_arr = []
     let i = 0
     while i < count
@@ -346,117 +348,117 @@ end
 # ═══════════════════════════════════════════════════════════════
 
 ## Generates a random integer in [min_val, max_val] using the given RNG instance.
-pub function rng_int(rng, min_val, max_val)
+pub function rng_int(rng: Rng, min_val: int, max_val: int) -> int
     return dist_uniform_int(rng, min_val, max_val)
 end
 
 ## Generates a random float in [0.0, 1.0) using the given RNG instance.
-pub function rng_float(rng)
+pub function rng_float(rng: Rng) -> float
     return dist_float(rng)
 end
 
 ## Generates a random float in [min_val, max_val) using the given RNG instance.
-pub function rng_float_range(rng, min_val, max_val)
+pub function rng_float_range(rng: Rng, min_val, max_val) -> float
     return dist_uniform_float(rng, min_val, max_val)
 end
 
 ## Returns 1 or 0 with 50% probability using the given RNG instance.
-pub function rng_bool(rng)
+pub function rng_bool(rng: Rng) -> int
     return dist_uniform_int(rng, 0, 1)
 end
 
 ## Returns 1 if event with percentage pct occurs using the given RNG instance, else 0.
-pub function rng_chance(rng, pct)
+pub function rng_chance(rng: Rng, pct: int) -> int
     return dist_chance(rng, pct)
 end
 
 ## Simulates a Bernoulli trial with success probability p using the given RNG instance.
-pub function rng_bernoulli(rng, p)
+pub function rng_bernoulli(rng: Rng, p) -> int
     return dist_bernoulli(rng, p)
 end
 
 ## Simulates a Binomial experiment with n trials and probability p using the given RNG instance.
-pub function rng_binomial(rng, n, p)
+pub function rng_binomial(rng: Rng, n: int, p) -> int
     return dist_binomial(rng, n, p)
 end
 
 ## Generates a normally distributed random float (Gaussian) using the given RNG instance.
-pub function rng_normal(rng, mean = 0.0, std_dev = 1.0)
+pub function rng_normal(rng: Rng, mean = 0.0, std_dev = 1.0) -> float
     return dist_normal(rng, mean, std_dev)
 end
 
 ## Generates an exponentially distributed random float using the given RNG instance.
-pub function rng_exponential(rng, rate = 1.0)
+pub function rng_exponential(rng: Rng, rate = 1.0) -> float
     return dist_exponential(rng, rate)
 end
 
 ## Simulates rolling an n-sided die using the given RNG instance.
-pub function rng_die(rng, sides = 6)
+pub function rng_die(rng: Rng, sides: int = 6) -> int
     return dist_die_roll(rng, sides)
 end
 
 ## Selects a single randomly chosen element from array arr using the given RNG instance.
-pub function rng_choice(rng, arr)
+pub function rng_choice(rng: Rng, arr: array)
     return sample_choice(rng, arr)
 end
 
 ## Selects count elements from array arr with replacement using the given RNG instance.
-pub function rng_choices(rng, arr, count) -> array
+pub function rng_choices(rng: Rng, arr: array, count: int) -> array
     return sample_choices(rng, arr, count)
 end
 
 ## Performs an in-place Fisher-Yates shuffle on array arr using the given RNG instance.
-pub function rng_shuffle(rng, arr) -> array
+pub function rng_shuffle(rng: Rng, arr: array) -> array
     return sample_shuffle(rng, arr)
 end
 
 ## Returns a new shuffled copy of array arr using the given RNG instance.
-pub function rng_shuffled(rng, arr) -> array
+pub function rng_shuffled(rng: Rng, arr: array) -> array
     return sample_shuffled(rng, arr)
 end
 
 ## Samples count distinct elements from array arr without replacement using the given RNG instance.
-pub function rng_sample(rng, arr, count) -> array
+pub function rng_sample(rng: Rng, arr: array, count: int) -> array
     return sample_sample(rng, arr, count)
 end
 
 ## Selects an item according to relative non-negative weights using the given RNG instance.
-pub function rng_weighted_choice(rng, items, weights)
+pub function rng_weighted_choice(rng: Rng, items: array, weights: array)
     return sample_weighted_choice(rng, items, weights)
 end
 
 ## Generates an array of count random byte integers (0..255) using the given RNG instance.
-pub function rng_bytes(rng, count) -> array
+pub function rng_bytes(rng: Rng, count: int) -> array
     return str_bytes(rng, count)
 end
 
 ## Generates a random string of length n from custom charset using the given RNG instance.
-pub function rng_str_random(rng, n, charset)
+pub function rng_str_random(rng: Rng, n: int, charset: string) -> string
     return str_random(rng, n, charset)
 end
 
 ## Generates an alphanumeric string of length n using the given RNG instance.
-pub function rng_alphanumeric(rng, n)
+pub function rng_alphanumeric(rng: Rng, n: int) -> string
     return str_alphanumeric(rng, n)
 end
 
 ## Generates a numeric digits string of length n using the given RNG instance.
-pub function rng_digits(rng, n)
+pub function rng_digits(rng: Rng, n: int) -> string
     return str_digits(rng, n)
 end
 
 ## Generates a lowercase hexadecimal string of length n using the given RNG instance.
-pub function rng_hex(rng, n)
+pub function rng_hex(rng: Rng, n: int) -> string
     return str_hex(rng, n)
 end
 
 ## Generates an uppercase hexadecimal string of length n using the given RNG instance.
-pub function rng_hex_upper(rng, n)
+pub function rng_hex_upper(rng: Rng, n: int) -> string
     return str_hex_upper(rng, n)
 end
 
 ## Generates a printable ASCII string of length n using the given RNG instance.
-pub function rng_ascii(rng, n)
+pub function rng_ascii(rng: Rng, n: int) -> string
     return str_ascii(rng, n)
 end
 
@@ -465,101 +467,101 @@ end
 # ═══════════════════════════════════════════════════════════════
 
 ## Advances RNG state and returns a non-negative pseudo-random integer.
-pub function Rng.next(self)
+pub function Rng.next(self: Rng) -> int
     return rng_next(self)
 end
 
 ## Generates a random integer in inclusive range [min_val, max_val].
-pub function Rng.int(self, min_val, max_val)
+pub function Rng.int(self: Rng, min_val: int, max_val: int) -> int
     return rng_int(self, min_val, max_val)
 end
 
 ## Generates a random float in [0.0, 1.0).
-pub function Rng.float(self)
+pub function Rng.float(self: Rng) -> float
     return rng_float(self)
 end
 
 ## Alias for Rng.float().
-pub function Rng.next_float(self)
+pub function Rng.next_float(self: Rng) -> float
     return rng_float(self)
 end
 
 ## Alias for Rng.float().
-pub function Rng.rand_float(self)
+pub function Rng.rand_float(self: Rng) -> float
     return rng_float(self)
 end
 
 ## Generates a random float in [min_val, max_val).
-pub function Rng.float_range(self, min_val, max_val)
+pub function Rng.float_range(self: Rng, min_val, max_val) -> float
     return rng_float_range(self, min_val, max_val)
 end
 
 ## Returns 1 or 0 with 50% probability.
-pub function Rng.bool(self)
+pub function Rng.bool(self: Rng) -> int
     return rng_bool(self)
 end
 
 ## Returns 1 if event with percentage pct occurs, else 0.
-pub function Rng.chance(self, pct)
+pub function Rng.chance(self: Rng, pct: int) -> int
     return rng_chance(self, pct)
 end
 
 ## Simulates a Bernoulli trial with success probability p.
-pub function Rng.bernoulli(self, p)
+pub function Rng.bernoulli(self: Rng, p) -> int
     return rng_bernoulli(self, p)
 end
 
 ## Simulates a Binomial experiment with n trials and probability p.
-pub function Rng.binomial(self, n, p)
+pub function Rng.binomial(self: Rng, n: int, p) -> int
     return rng_binomial(self, n, p)
 end
 
 ## Generates a normally distributed random float (Gaussian).
-pub function Rng.normal(self, mean = 0.0, std_dev = 1.0)
+pub function Rng.normal(self: Rng, mean = 0.0, std_dev = 1.0) -> float
     return rng_normal(self, mean, std_dev)
 end
 
 ## Generates an exponentially distributed random float.
-pub function Rng.exponential(self, rate = 1.0)
+pub function Rng.exponential(self: Rng, rate = 1.0) -> float
     return rng_exponential(self, rate)
 end
 
 ## Simulates rolling an n-sided die.
-pub function Rng.die(self, sides = 6)
+pub function Rng.die(self: Rng, sides: int = 6) -> int
     return rng_die(self, sides)
 end
 
 ## Selects a single randomly chosen element from array arr.
-pub function Rng.choice(self, arr)
+pub function Rng.choice(self: Rng, arr: array)
     return rng_choice(self, arr)
 end
 
 ## Selects count elements from array arr with replacement.
-pub function Rng.choices(self, arr, count) -> array
+pub function Rng.choices(self: Rng, arr: array, count: int) -> array
     return rng_choices(self, arr, count)
 end
 
 ## Performs an in-place Fisher-Yates shuffle on array arr.
-pub function Rng.shuffle(self, arr) -> array
+pub function Rng.shuffle(self: Rng, arr: array) -> array
     return rng_shuffle(self, arr)
 end
 
 ## Returns a new shuffled copy of array arr.
-pub function Rng.shuffled(self, arr) -> array
+pub function Rng.shuffled(self: Rng, arr: array) -> array
     return rng_shuffled(self, arr)
 end
 
 ## Samples count distinct elements from array arr without replacement.
-pub function Rng.sample(self, arr, count) -> array
+pub function Rng.sample(self: Rng, arr: array, count: int) -> array
     return rng_sample(self, arr, count)
 end
 
 ## Selects an item according to relative non-negative weights.
-pub function Rng.weighted_choice(self, items, weights)
+pub function Rng.weighted_choice(self: Rng, items: array, weights: array)
     return rng_weighted_choice(self, items, weights)
 end
 
 ## Generates an array of count random byte integers (0..255).
-pub function Rng.bytes(self, count) -> array
+pub function Rng.bytes(self: Rng, count: int) -> array
     return rng_bytes(self, count)
 end

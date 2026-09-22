@@ -1,5 +1,9 @@
-# Types and data structures for rand
-# Part of the Alya Language package ecosystem (https://github.com/alya-lang)
+## # rand/types
+##
+## Types and data structures for the rand package.
+## Part of the Alya Language package ecosystem (https://github.com/alya-lang).
+##
+## Defines PRNG engine selectors, generator state, and weighted items.
 
 ## PRNG engine algorithms supported by the rand package.
 pub enum RngAlgorithm
@@ -10,15 +14,25 @@ pub enum RngAlgorithm
 end
 
 ## Pseudo-Random Number Generator state and configuration container.
+##
+## ### Fields
+## - `algorithm`: `RngAlgorithm` selector value.
+## - `state0`: Primary 64-bit state word.
+## - `state1`: Secondary 64-bit state word.
+## - `inc`: Increment word for PCG/LCG engines.
 pub struct Rng
-    algorithm,
-    state0,
-    state1,
-    inc
+    algorithm: int,
+    state0: int,
+    state1: int,
+    inc: int
 end
 
 ## Weighted item structure for weighted choice selections.
+##
+## ### Fields
+## - `item`: Candidate value.
+## - `weight`: Relative non-negative weight.
 pub struct WeightedItem
     item,
-    weight
+    weight: int
 end

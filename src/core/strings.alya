@@ -1,10 +1,12 @@
-# String Generation Utilities for rand package
-# Part of the Alya Language package ecosystem (https://github.com/alya-lang)
+## # rand/strings
+##
+## String generation utilities for the rand package.
+## Part of the Alya Language package ecosystem (https://github.com/alya-lang).
 
 import "./distributions.alya"
 
 ## Generates a random string of length n from the provided charset.
-pub function str_random(rng, n, charset)
+pub function str_random(rng: Rng, n: int, charset: string) -> string
     let clen = len(charset)
     if clen == 0 or n <= 0
         return ""
@@ -20,37 +22,37 @@ pub function str_random(rng, n, charset)
 end
 
 ## Generates a random alphanumeric string of length n ([a-zA-Z0-9]).
-pub function str_alphanumeric(rng, n)
+pub function str_alphanumeric(rng: Rng, n: int) -> string
     let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     return str_random(rng, n, chars)
 end
 
 ## Generates a random numeric digits string of length n ([0-9]).
-pub function str_digits(rng, n)
+pub function str_digits(rng: Rng, n: int) -> string
     let digits = "0123456789"
     return str_random(rng, n, digits)
 end
 
 ## Generates a random lowercase hexadecimal string of length n ([0-9a-f]).
-pub function str_hex(rng, n)
+pub function str_hex(rng: Rng, n: int) -> string
     let hex = "0123456789abcdef"
     return str_random(rng, n, hex)
 end
 
 ## Generates a random uppercase hexadecimal string of length n ([0-9A-F]).
-pub function str_hex_upper(rng, n)
+pub function str_hex_upper(rng: Rng, n: int) -> string
     let hex = "0123456789ABCDEF"
     return str_random(rng, n, hex)
 end
 
 ## Generates a random printable ASCII string of length n (ASCII 33 to 126).
-pub function str_ascii(rng, n)
+pub function str_ascii(rng: Rng, n: int) -> string
     let chars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ abcdefghijklmnopqrstuvwxyz{|}~"
     return str_random(rng, n, chars)
 end
 
 ## Generates an array of count random byte integers (0..255).
-pub function str_bytes(rng, count) -> array
+pub function str_bytes(rng: Rng, count: int) -> array
     let bytes_arr = []
     let i = 0
     while i < count

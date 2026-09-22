@@ -1,10 +1,12 @@
-# Array & Collection Sampling Utilities for rand package
-# Part of the Alya Language package ecosystem (https://github.com/alya-lang)
+## # rand/sampling
+##
+## Array and collection sampling utilities for the rand package.
+## Part of the Alya Language package ecosystem (https://github.com/alya-lang).
 
 import "./distributions.alya"
 
 ## Returns a randomly selected element from array arr.
-pub function sample_choice(rng, arr)
+pub function sample_choice(rng: Rng, arr: array)
     let n = len(arr)
     if n == 0
         return null
@@ -19,7 +21,7 @@ pub function sample_choice(rng, arr)
 end
 
 ## Performs an in-place Fisher-Yates shuffle of array arr.
-pub function sample_shuffle(rng, arr) -> array
+pub function sample_shuffle(rng: Rng, arr: array) -> array
     let n = len(arr)
     if n <= 1
         return arr
@@ -41,7 +43,7 @@ pub function sample_shuffle(rng, arr) -> array
 end
 
 ## Returns a new shuffled copy of array arr.
-pub function sample_shuffled(rng, arr) -> array
+pub function sample_shuffled(rng: Rng, arr: array) -> array
     let copy = []
     for item in arr
         copy.push(item)
@@ -51,7 +53,7 @@ pub function sample_shuffled(rng, arr) -> array
 end
 
 ## Returns count randomly sampled distinct elements from arr without replacement.
-pub function sample_sample(rng, arr, count) -> array
+pub function sample_sample(rng: Rng, arr: array, count: int) -> array
     let n = len(arr)
     if count <= 0 or n == 0
         return []
@@ -72,7 +74,7 @@ pub function sample_sample(rng, arr, count) -> array
 end
 
 ## Returns count elements chosen randomly from arr with replacement.
-pub function sample_choices(rng, arr, count) -> array
+pub function sample_choices(rng: Rng, arr: array, count: int) -> array
     let n = len(arr)
     if count <= 0 or n == 0
         return []
@@ -87,7 +89,7 @@ pub function sample_choices(rng, arr, count) -> array
 end
 
 ## Returns an item chosen randomly according to relative non-negative weights using roulette selection.
-pub function sample_weighted_choice(rng, items, weights)
+pub function sample_weighted_choice(rng: Rng, items: array, weights: array)
     let n = len(items)
     if n == 0
         return null

@@ -1,5 +1,7 @@
-# PRNG Core Algorithms & State Management for rand package
-# Part of the Alya Language package ecosystem (https://github.com/alya-lang)
+## # rand/algorithms
+##
+## PRNG core algorithms and state management for the rand package.
+## Part of the Alya Language package ecosystem (https://github.com/alya-lang).
 
 import "std/time"
 import "../types.alya"
@@ -22,7 +24,7 @@ function algo_auto_seed()
 end
 
 ## Creates and initializes a new RNG instance with the specified seed and algorithm.
-pub function rng_new(seed = 0, algorithm = 2) -> Rng
+pub function rng_new(seed: int = 0, algorithm: int = 2) -> Rng
     if seed == 0
         seed = algo_auto_seed()
     end
@@ -94,7 +96,7 @@ function _lcg_next(rng)
 end
 
 ## Advances RNG state and returns a non-negative pseudo-random integer in [0, 2147483647].
-pub function rng_next(rng)
+pub function rng_next(rng: Rng) -> int
     let raw = 0
     when rng.algorithm
         is RngAlgorithm.XorShift64 then
@@ -112,7 +114,7 @@ pub function rng_next(rng)
 end
 
 ## Generates random bits in range [0, 2^bits - 1] (bits <= 60).
-pub function rng_next_bits(rng, bits)
+pub function rng_next_bits(rng: Rng, bits: int) -> int
     if bits <= 0
         return 0
     end

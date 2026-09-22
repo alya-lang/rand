@@ -1,4 +1,6 @@
-# demo.alya - Interactive showcase of the rand package for Alya
+## Demo of the rand package
+## Part of the Alya Language package ecosystem (https://github.com/alya-lang)
+
 import "../src/lib.alya" as rand
 
 function main()
