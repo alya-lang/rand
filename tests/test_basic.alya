@@ -114,94 +114,156 @@ function main()
 
     let b_bytes = rand::bytes(16)
     runner_assert_eq(r, len(b_bytes), 16, "rand::bytes(16) generates 16 bytes")
+    @cfg(feature = "strings")
     let test_rng = rand::new(42)
+    @cfg(feature = "strings")
     let b_rng = rand::rng_bytes(test_rng, 10)
+    @cfg(feature = "strings")
     runner_assert_eq(r, len(b_rng), 10, "rand::rng_bytes(rng, 10) generates 10 bytes")
 
     # ═══════════════════════════════════════════════════════════════
     # 6. Deterministic Seeding & Multiple Engines
     # ═══════════════════════════════════════════════════════════════
+    @cfg(feature = "distributions")
     let rng_a = rand::new(42, 2) # SplitMix64
+    @cfg(feature = "distributions")
     let val_a1 = rand::rng_int(rng_a, 1, 1000)
+    @cfg(feature = "distributions")
     let val_a2 = rand::rng_int(rng_a, 1, 1000)
 
+    @cfg(feature = "distributions")
     let rng_b = rand::new(42, 2) # Same seed and algorithm
+    @cfg(feature = "distributions")
     let val_b1 = rand::rng_int(rng_b, 1, 1000)
+    @cfg(feature = "distributions")
     let val_b2 = rand::rng_int(rng_b, 1, 1000)
 
+    @cfg(feature = "distributions")
     runner_assert_eq(r, val_a1, val_b1, "Deterministic PRNG: first value identical with same seed")
+    @cfg(feature = "distributions")
     runner_assert_eq(r, val_a2, val_b2, "Deterministic PRNG: second value identical with same seed")
 
+    @cfg(feature = "distributions")
     let rng_xorshift = rand::new(99, 1) # Xorshift64
+    @cfg(feature = "distributions")
     let val_x = rand::rng_int(rng_xorshift, 1, 100)
+    @cfg(feature = "distributions")
     runner_assert(r, val_x >= 1 and val_x <= 100, "Xorshift64 engine produces in-range values")
 
+    @cfg(feature = "distributions")
     let rng_pcg = rand::new(123, 3) # PCG32
+    @cfg(feature = "distributions")
     let val_p = rand::rng_int(rng_pcg, 1, 100)
+    @cfg(feature = "distributions")
     runner_assert(r, val_p >= 1 and val_p <= 100, "PCG32 engine produces in-range values")
 
     # ═══════════════════════════════════════════════════════════════
     # 7. Idiomatic Rng Struct Methods & RngAlgorithm Enum
     # ═══════════════════════════════════════════════════════════════
-    let rng_m = rand::new(777, rand::RngAlgorithm.SplitMix64)
-    let m_int = rng_m.int(10, 50)
+    @cfg(feature = "distributions")
+    let rng_md = rand::new(777, rand::RngAlgorithm.SplitMix64)
+    @cfg(feature = "distributions")
+    let m_int = rng_md.int(10, 50)
+    @cfg(feature = "distributions")
     runner_assert(r, m_int >= 10 and m_int <= 50, "rng.int() struct method works")
 
-    let m_flt = rng_m.next_float()
+    @cfg(feature = "distributions")
+    let m_flt = rng_md.next_float()
+    @cfg(feature = "distributions")
     runner_assert(r, m_flt >= 0.0 and m_flt < 1.0, "rng.next_float() struct method works")
 
-    let m_choice = rng_m.choice(["x", "y", "z"])
+    @cfg(feature = "sampling")
+    let rng_ms = rand::new(777, rand::RngAlgorithm.SplitMix64)
+    @cfg(feature = "sampling")
+    let m_choice = rng_ms.choice(["x", "y", "z"])
+    @cfg(feature = "sampling")
     runner_assert(r, m_choice in ["x", "y", "z"], "rng.choice() struct method and 'in' operator work")
 
-    let m_bytes = rng_m.bytes(4)
+    @cfg(feature = "strings")
+    let rng_mb = rand::new(777, rand::RngAlgorithm.SplitMix64)
+    @cfg(feature = "strings")
+    let m_bytes = rng_mb.bytes(4)
+    @cfg(feature = "strings")
     runner_assert_eq(r, len(m_bytes), 4, "rng.bytes() struct method works")
 
-    let m_choices = rng_m.choices(["red", "blue"], 3)
+    @cfg(feature = "sampling")
+    let m_choices = rng_ms.choices(["red", "blue"], 3)
+    @cfg(feature = "sampling")
     runner_assert_eq(r, len(m_choices), 3, "rng.choices() struct method works")
 
-    let m_sample = rng_m.sample(["red", "green", "blue"], 2)
+    @cfg(feature = "sampling")
+    let m_sample = rng_ms.sample(["red", "green", "blue"], 2)
+    @cfg(feature = "sampling")
     runner_assert_eq(r, len(m_sample), 2, "rng.sample() struct method works")
 
-    let m_shuffled = rng_m.shuffled([10, 20, 30])
+    @cfg(feature = "sampling")
+    let m_shuffled = rng_ms.shuffled([10, 20, 30])
+    @cfg(feature = "sampling")
     runner_assert_eq(r, len(m_shuffled), 3, "rng.shuffled() struct method works")
 
-    let m_weighted = rng_m.weighted_choice(["gold", "silver"], [100, 0])
+    @cfg(feature = "sampling")
+    let m_weighted = rng_ms.weighted_choice(["gold", "silver"], [100, 0])
+    @cfg(feature = "sampling")
     runner_assert_str_eq(r, m_weighted, "gold", "rng.weighted_choice() struct method works")
 
-    let m_die = rng_m.die(12)
+    @cfg(feature = "distributions")
+    let m_die = rng_md.die(12)
+    @cfg(feature = "distributions")
     runner_assert(r, m_die >= 1 and m_die <= 12, "rng.die() struct method works")
 
-    let m_bern = rng_m.bernoulli(1.0)
+    @cfg(feature = "distributions")
+    let m_bern = rng_md.bernoulli(1.0)
+    @cfg(feature = "distributions")
     runner_assert_eq(r, m_bern, 1, "rng.bernoulli() struct method works")
 
-    let m_bin = rng_m.binomial(4, 1.0)
+    @cfg(feature = "distributions")
+    let m_bin = rng_md.binomial(4, 1.0)
+    @cfg(feature = "distributions")
     runner_assert_eq(r, m_bin, 4, "rng.binomial() struct method works")
 
-    let m_chance = rng_m.chance(100)
+    @cfg(feature = "distributions")
+    let m_chance = rng_md.chance(100)
+    @cfg(feature = "distributions")
     runner_assert_eq(r, m_chance, 1, "rng.chance() struct method works")
 
     # ═══════════════════════════════════════════════════════════════
     # 8. Instance Helpers for Strings and Distributions
     # ═══════════════════════════════════════════════════════════════
+    @cfg(feature = "strings")
     let h_alpha = rand::rng_alphanumeric(test_rng, 12)
+    @cfg(feature = "strings")
     runner_assert_eq(r, len(h_alpha), 12, "rand::rng_alphanumeric generates 12 chars")
 
+    @cfg(feature = "strings")
     let h_digits = rand::rng_digits(test_rng, 8)
+    @cfg(feature = "strings")
     runner_assert_eq(r, len(h_digits), 8, "rand::rng_digits generates 8 digits")
 
+    @cfg(feature = "strings")
     let h_hex = rand::rng_hex(test_rng, 6)
+    @cfg(feature = "strings")
     runner_assert_eq(r, len(h_hex), 6, "rand::rng_hex generates 6 chars")
 
+    @cfg(feature = "strings")
     let h_hex_up = rand::rng_hex_upper(test_rng, 6)
+    @cfg(feature = "strings")
     runner_assert_eq(r, len(h_hex_up), 6, "rand::rng_hex_upper generates 6 chars")
 
+    @cfg(feature = "strings")
     let h_str = rand::rng_str_random(test_rng, 5, "ABC")
+    @cfg(feature = "strings")
     runner_assert_eq(r, len(h_str), 5, "rand::rng_str_random generates custom string")
 
-    let h_choices = rand::rng_choices(test_rng, ["x", "y"], 4)
+    @cfg(feature = "sampling")
+    let test_rng_s = rand::new(42)
+    @cfg(feature = "sampling")
+    let h_choices = rand::rng_choices(test_rng_s, ["x", "y"], 4)
+    @cfg(feature = "sampling")
     runner_assert_eq(r, len(h_choices), 4, "rand::rng_choices selects 4 elements")
 
-    let h_sample = rand::rng_sample(test_rng, ["x", "y", "z"], 2)
+    @cfg(feature = "sampling")
+    let h_sample = rand::rng_sample(test_rng_s, ["x", "y", "z"], 2)
+    @cfg(feature = "sampling")
     runner_assert_eq(r, len(h_sample), 2, "rand::rng_sample samples 2 elements")
 
     let failed = runner_summary(r)

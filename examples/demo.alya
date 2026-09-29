@@ -22,12 +22,19 @@ function main()
 
     # 2. PRNG Engines (Deterministic with Seeds)
     say "--- 2. Deterministic PRNG Engines ---"
+    @cfg(feature = "distributions")
     let rng_sm = rand::new(12345, rand::RngAlgorithm.SplitMix64)
+    @cfg(feature = "distributions")
     let rng_xor = rand::new(12345, rand::RngAlgorithm.XorShift64)
+    @cfg(feature = "distributions")
     let rng_pcg = rand::new(12345, rand::RngAlgorithm.Pcg32)
+    @cfg(feature = "distributions")
     say "SplitMix64 seed 12345 #1: " + str(rand::rng_int(rng_sm, 1, 100))
+    @cfg(feature = "distributions")
     say "SplitMix64 seed 12345 #2: " + str(rand::rng_int(rng_sm, 1, 100))
+    @cfg(feature = "distributions")
     say "Xorshift64 seed 12345:    " + str(rand::rng_int(rng_xor, 1, 100))
+    @cfg(feature = "distributions")
     say "PCG32      seed 12345:    " + str(rand::rng_int(rng_pcg, 1, 100))
     say ""
 

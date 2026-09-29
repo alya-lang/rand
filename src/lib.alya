@@ -6,8 +6,11 @@
 
 import "./types.alya"
 import "./core/algorithms.alya"
+@cfg(feature = "distributions")
 import "./core/distributions.alya"
+@cfg(feature = "sampling")
 import "./core/sampling.alya"
+@cfg(feature = "strings")
 import "./core/strings.alya"
 
 # ═══════════════════════════════════════════════════════════════
@@ -348,116 +351,185 @@ end
 # ═══════════════════════════════════════════════════════════════
 
 ## Generates a random integer in [min_val, max_val] using the given RNG instance.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function rng_int(rng: Rng, min_val: int, max_val: int) -> int
     return dist_uniform_int(rng, min_val, max_val)
 end
 
 ## Generates a random float in [0.0, 1.0) using the given RNG instance.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function rng_float(rng: Rng) -> float
     return dist_float(rng)
 end
 
 ## Generates a random float in [min_val, max_val) using the given RNG instance.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function rng_float_range(rng: Rng, min_val, max_val) -> float
     return dist_uniform_float(rng, min_val, max_val)
 end
 
 ## Returns 1 or 0 with 50% probability using the given RNG instance.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function rng_bool(rng: Rng) -> int
     return dist_uniform_int(rng, 0, 1)
 end
 
 ## Returns 1 if event with percentage pct occurs using the given RNG instance, else 0.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function rng_chance(rng: Rng, pct: int) -> int
     return dist_chance(rng, pct)
 end
 
 ## Simulates a Bernoulli trial with success probability p using the given RNG instance.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function rng_bernoulli(rng: Rng, p) -> int
     return dist_bernoulli(rng, p)
 end
 
 ## Simulates a Binomial experiment with n trials and probability p using the given RNG instance.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function rng_binomial(rng: Rng, n: int, p) -> int
     return dist_binomial(rng, n, p)
 end
 
 ## Generates a normally distributed random float (Gaussian) using the given RNG instance.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function rng_normal(rng: Rng, mean = 0.0, std_dev = 1.0) -> float
     return dist_normal(rng, mean, std_dev)
 end
 
 ## Generates an exponentially distributed random float using the given RNG instance.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function rng_exponential(rng: Rng, rate = 1.0) -> float
     return dist_exponential(rng, rate)
 end
 
 ## Simulates rolling an n-sided die using the given RNG instance.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function rng_die(rng: Rng, sides: int = 6) -> int
     return dist_die_roll(rng, sides)
 end
 
 ## Selects a single randomly chosen element from array arr using the given RNG instance.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function rng_choice(rng: Rng, arr: array)
     return sample_choice(rng, arr)
 end
 
 ## Selects count elements from array arr with replacement using the given RNG instance.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function rng_choices(rng: Rng, arr: array, count: int) -> array
     return sample_choices(rng, arr, count)
 end
 
 ## Performs an in-place Fisher-Yates shuffle on array arr using the given RNG instance.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function rng_shuffle(rng: Rng, arr: array) -> array
     return sample_shuffle(rng, arr)
 end
 
 ## Returns a new shuffled copy of array arr using the given RNG instance.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function rng_shuffled(rng: Rng, arr: array) -> array
     return sample_shuffled(rng, arr)
 end
 
 ## Samples count distinct elements from array arr without replacement using the given RNG instance.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function rng_sample(rng: Rng, arr: array, count: int) -> array
     return sample_sample(rng, arr, count)
 end
 
 ## Selects an item according to relative non-negative weights using the given RNG instance.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function rng_weighted_choice(rng: Rng, items: array, weights: array)
     return sample_weighted_choice(rng, items, weights)
 end
 
 ## Generates an array of count random byte integers (0..255) using the given RNG instance.
+## Requires the `strings` feature (default-on).
+##
+@cfg(feature = "strings")
 pub function rng_bytes(rng: Rng, count: int) -> array
     return str_bytes(rng, count)
 end
 
 ## Generates a random string of length n from custom charset using the given RNG instance.
+## Requires the `strings` feature (default-on).
+##
+@cfg(feature = "strings")
 pub function rng_str_random(rng: Rng, n: int, charset: string) -> string
     return str_random(rng, n, charset)
 end
 
 ## Generates an alphanumeric string of length n using the given RNG instance.
+## Requires the `strings` feature (default-on).
+##
+@cfg(feature = "strings")
 pub function rng_alphanumeric(rng: Rng, n: int) -> string
     return str_alphanumeric(rng, n)
 end
 
 ## Generates a numeric digits string of length n using the given RNG instance.
+## Requires the `strings` feature (default-on).
+##
+@cfg(feature = "strings")
 pub function rng_digits(rng: Rng, n: int) -> string
     return str_digits(rng, n)
 end
 
 ## Generates a lowercase hexadecimal string of length n using the given RNG instance.
+## Requires the `strings` feature (default-on).
+##
+@cfg(feature = "strings")
 pub function rng_hex(rng: Rng, n: int) -> string
     return str_hex(rng, n)
 end
 
 ## Generates an uppercase hexadecimal string of length n using the given RNG instance.
+## Requires the `strings` feature (default-on).
+##
+@cfg(feature = "strings")
 pub function rng_hex_upper(rng: Rng, n: int) -> string
     return str_hex_upper(rng, n)
 end
 
 ## Generates a printable ASCII string of length n using the given RNG instance.
+## Requires the `strings` feature (default-on).
+##
+@cfg(feature = "strings")
 pub function rng_ascii(rng: Rng, n: int) -> string
     return str_ascii(rng, n)
 end
@@ -472,96 +544,153 @@ pub function Rng.next(self: Rng) -> int
 end
 
 ## Generates a random integer in inclusive range [min_val, max_val].
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.int(self: Rng, min_val: int, max_val: int) -> int
     return rng_int(self, min_val, max_val)
 end
 
 ## Generates a random float in [0.0, 1.0).
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.float(self: Rng) -> float
     return rng_float(self)
 end
 
 ## Alias for Rng.float().
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.next_float(self: Rng) -> float
     return rng_float(self)
 end
 
 ## Alias for Rng.float().
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.rand_float(self: Rng) -> float
     return rng_float(self)
 end
 
 ## Generates a random float in [min_val, max_val).
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.float_range(self: Rng, min_val, max_val) -> float
     return rng_float_range(self, min_val, max_val)
 end
 
 ## Returns 1 or 0 with 50% probability.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.bool(self: Rng) -> int
     return rng_bool(self)
 end
 
 ## Returns 1 if event with percentage pct occurs, else 0.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.chance(self: Rng, pct: int) -> int
     return rng_chance(self, pct)
 end
 
 ## Simulates a Bernoulli trial with success probability p.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.bernoulli(self: Rng, p) -> int
     return rng_bernoulli(self, p)
 end
 
 ## Simulates a Binomial experiment with n trials and probability p.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.binomial(self: Rng, n: int, p) -> int
     return rng_binomial(self, n, p)
 end
 
 ## Generates a normally distributed random float (Gaussian).
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.normal(self: Rng, mean = 0.0, std_dev = 1.0) -> float
     return rng_normal(self, mean, std_dev)
 end
 
 ## Generates an exponentially distributed random float.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.exponential(self: Rng, rate = 1.0) -> float
     return rng_exponential(self, rate)
 end
 
 ## Simulates rolling an n-sided die.
+## Requires the `distributions` feature (default-on).
+##
+@cfg(feature = "distributions")
 pub function Rng.die(self: Rng, sides: int = 6) -> int
     return rng_die(self, sides)
 end
 
 ## Selects a single randomly chosen element from array arr.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function Rng.choice(self: Rng, arr: array)
     return rng_choice(self, arr)
 end
 
 ## Selects count elements from array arr with replacement.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function Rng.choices(self: Rng, arr: array, count: int) -> array
     return rng_choices(self, arr, count)
 end
 
 ## Performs an in-place Fisher-Yates shuffle on array arr.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function Rng.shuffle(self: Rng, arr: array) -> array
     return rng_shuffle(self, arr)
 end
 
 ## Returns a new shuffled copy of array arr.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function Rng.shuffled(self: Rng, arr: array) -> array
     return rng_shuffled(self, arr)
 end
 
 ## Samples count distinct elements from array arr without replacement.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function Rng.sample(self: Rng, arr: array, count: int) -> array
     return rng_sample(self, arr, count)
 end
 
 ## Selects an item according to relative non-negative weights.
+## Requires the `sampling` feature (default-on).
+##
+@cfg(feature = "sampling")
 pub function Rng.weighted_choice(self: Rng, items: array, weights: array)
     return rng_weighted_choice(self, items, weights)
 end
 
 ## Generates an array of count random byte integers (0..255).
+## Requires the `strings` feature (default-on).
+##
+@cfg(feature = "strings")
 pub function Rng.bytes(self: Rng, count: int) -> array
     return rng_bytes(self, count)
 end

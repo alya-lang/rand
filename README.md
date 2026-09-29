@@ -60,6 +60,26 @@ alya add rand --git https://github.com/alya-lang/rand --branch main
 alya install
 ```
 
+### Package Features
+
+| Feature | Default | Description |
+|:---|:---:|:---|
+| `distributions` | ✅ | Statistical distributions on `Rng` instances (`rng_int`, `rng_normal`, `rng_die`, ...). |
+| `sampling` | ✅ | Collection sampling on `Rng` instances (`rng_choice`, `rng_shuffle`, `rng_sample`, ...). |
+| `strings` | ✅ | Random strings/bytes on `Rng` instances (`rng_bytes`, `rng_hex`, `rng_alphanumeric`, ...). |
+
+The global convenience API (`next`, `int`, `choice`, `shuffle`, `hex`, ...) always works.
+
+```bash
+# Full build (default)
+alya install
+alya test
+
+# Slim build (global API only)
+alya install --no-default-features
+alya test --no-default-features
+```
+
 ---
 
 ## 🚀 Quick Start

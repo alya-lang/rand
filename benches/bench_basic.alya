@@ -25,6 +25,23 @@ function main()
     end
     bench_stop(runner, "rand::int(1, 100) 500k calls")
 
+    @cfg(feature = "distributions")
+    bench_rng_int(runner)
+
+    # 5. Alphanumeric String Generation
+    bench_start(runner, 50000)
+    let s = 0
+    while s < 50000
+        rand::alphanumeric(16)
+        s += 1
+    end
+    bench_stop(runner, "rand::alphanumeric(16) 50k calls")
+
+    bench_summary(runner)
+end
+
+@cfg(feature = "distributions")
+function bench_rng_int(runner)
     # 3. Dedicated Xorshift64 Instance
     let rng_xor = rand::new(12345, rand::RngAlgorithm.XorShift64)
     bench_start(runner, 500000)
@@ -44,17 +61,5 @@ function main()
         m += 1
     end
     bench_stop(runner, "SplitMix64 rng_int 500k calls")
-
-    # 5. Alphanumeric String Generation
-    bench_start(runner, 50000)
-    let s = 0
-    while s < 50000
-        rand::alphanumeric(16)
-        s += 1
-    end
-    bench_stop(runner, "rand::alphanumeric(16) 50k calls")
-
-    bench_summary(runner)
 end
-
 main()

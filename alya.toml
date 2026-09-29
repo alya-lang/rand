@@ -12,6 +12,12 @@ keywords = ["alya", "alya-lang", "package", "rand", "random", "prng", "sampling"
 
 [dependencies]
 
+[features]
+default = ["distributions", "sampling", "strings"]
+distributions = []
+sampling = []
+strings = []
+
 # [lint]
 # disabled_rules = []
 # exclude = []
