@@ -1,6 +1,6 @@
 [package]
 name = "rand"
-version = "0.2.0"
+version = "0.1.0"
 alya-version = "0.0.19"
 entry = "src/lib.alya"
 description = "Modern, fast pseudo-random number generator (PRNG), statistical distributions, and sampling toolkit for Alya"
@@ -11,12 +11,6 @@ repository = "https://github.com/alya-lang/rand"
 keywords = ["alya", "alya-lang", "package", "rand", "random", "prng", "sampling"]
 
 [dependencies]
-
-[features]
-default = ["distributions", "sampling", "strings"]
-distributions = []
-sampling = []
-strings = []
 
 # [lint]
 # disabled_rules = []
@@ -30,3 +24,9 @@ strings = []
 
 # [bench]
 # exclude = []
+
+[features]
+default = ["distributions", "sampling", "strings"]
+distributions = []
+sampling = []
+strings = []
