@@ -88,7 +88,7 @@ pub function bool() -> int
 end
 
 ## Returns 1 if an event with percentage pct (0..100) occurs, else 0.
-pub function chance(pct: int) -> int
+pub function chance(pct: int) -> bool
     if pct <= 0
         return false
     end
@@ -99,7 +99,7 @@ pub function chance(pct: int) -> int
 end
 
 ## Simulates a Bernoulli trial with success probability p (0.0 <= p <= 1.0).
-pub function bernoulli(p) -> int
+pub function bernoulli(p) -> bool
     if p <= 0.0
         return false
     end
