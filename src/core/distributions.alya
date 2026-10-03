@@ -44,16 +44,16 @@ end
 ## Returns 1 with probability p (0.0 <= p <= 1.0), else 0.
 pub function dist_bernoulli(rng: Rng, p) -> int
     if p <= 0.0
-        return 0
+        return false
     end
     if p >= 1.0
-        return 1
+        return true
     end
     let sample = dist_float(rng)
     if sample < p
-        return 1
+        return true
     else
-        return 0
+        return false
     end
 end
 
@@ -74,10 +74,10 @@ end
 ## Returns 1 if an event with probability pct (0..100) occurs, else 0.
 pub function dist_chance(rng: Rng, pct: int) -> int
     if pct <= 0
-        return 0
+        return false
     end
     if pct >= 100
-        return 1
+        return true
     end
     return (rng_next(rng) % 100) < pct
 end

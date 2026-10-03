@@ -90,10 +90,10 @@ end
 ## Returns 1 if an event with percentage pct (0..100) occurs, else 0.
 pub function chance(pct: int) -> int
     if pct <= 0
-        return 0
+        return false
     end
     if pct >= 100
-        return 1
+        return true
     end
     return (next() % 100) < pct
 end
@@ -101,16 +101,16 @@ end
 ## Simulates a Bernoulli trial with success probability p (0.0 <= p <= 1.0).
 pub function bernoulli(p) -> int
     if p <= 0.0
-        return 0
+        return false
     end
     if p >= 1.0
-        return 1
+        return true
     end
     let sample = rand_float()
     if sample < p
-        return 1
+        return true
     else
-        return 0
+        return false
     end
 end
 

@@ -15,15 +15,15 @@ function main()
     runner_assert(r, raw >= 0, "rand::next() generates non-negative integer")
 
     let i = 0
-    let all_in_range = 1
+    let all_in_range = true
     while i < 100
         let val = rand::int(10, 20)
         if val < 10 or val > 20
-            all_in_range = 0
+            all_in_range = false
         end
         i += 1
     end
-    runner_assert(r, all_in_range == 1, "rand::int(10, 20) strictly within range across 100 iterations")
+    runner_assert(r, all_in_range == true, "rand::int(10, 20) strictly within range across 100 iterations")
 
     let single = rand::int(5, 5)
     runner_assert_eq(r, single, 5, "rand::int(x, x) returns x when min == max")
@@ -31,22 +31,22 @@ function main()
     # ═══════════════════════════════════════════════════════════════
     # 2. Float Range & Probabilities
     # ═══════════════════════════════════════════════════════════════
-    let f_ok = 1
+    let f_ok = true
     i = 0
     while i < 100
         let f = rand::float_range(1.5, 3.5)
         if f < 1.5 or f >= 3.5
-            f_ok = 0
+            f_ok = false
         end
         i += 1
     end
-    runner_assert(r, f_ok == 1, "rand::float_range(1.5, 3.5) strictly within [min, max)")
+    runner_assert(r, f_ok == true, "rand::float_range(1.5, 3.5) strictly within [min, max)")
 
-    runner_assert_eq(r, rand::chance(0), 0, "rand::chance(0) always returns 0")
-    runner_assert_eq(r, rand::chance(100), 1, "rand::chance(100) always returns 1")
+    runner_assert_eq(r, rand::chance(0), false, "rand::chance(0) always returns 0")
+    runner_assert_eq(r, rand::chance(100), true, "rand::chance(100) always returns 1")
 
-    runner_assert_eq(r, rand::bernoulli(0.0), 0, "rand::bernoulli(0.0) returns 0")
-    runner_assert_eq(r, rand::bernoulli(1.0), 1, "rand::bernoulli(1.0) returns 1")
+    runner_assert_eq(r, rand::bernoulli(0.0), false, "rand::bernoulli(0.0) returns 0")
+    runner_assert_eq(r, rand::bernoulli(1.0), true, "rand::bernoulli(1.0) returns 1")
 
     # ═══════════════════════════════════════════════════════════════
     # 3. Statistical Distributions
@@ -57,29 +57,29 @@ function main()
     let exp_val = rand::exponential(2.0)
     runner_assert(r, exp_val >= 0.0, "rand::exponential produces non-negative float")
 
-    let d_ok = 1
+    let d_ok = true
     i = 0
     while i < 50
         let roll = rand::die(6)
         if roll < 1 or roll > 6
-            d_ok = 0
+            d_ok = false
         end
         i += 1
     end
-    runner_assert(r, d_ok == 1, "rand::die(6) produces values strictly within 1..6")
+    runner_assert(r, d_ok == true, "rand::die(6) produces values strictly within 1..6")
 
     # ═══════════════════════════════════════════════════════════════
     # 4. Array Sampling & Shuffling
     # ═══════════════════════════════════════════════════════════════
     let fruits = ["apple", "banana", "cherry", "date"]
     let picked = rand::choice(fruits)
-    let found = 0
+    let found = false
     for fruit in fruits
         if streq(fruit, picked)
-            found = 1
+            found = true
         end
     end
-    runner_assert(r, found == 1, "rand::choice selects element from source array")
+    runner_assert(r, found == true, "rand::choice selects element from source array")
 
     let sampled = rand::sample(fruits, 2)
     runner_assert_eq(r, len(sampled), 2, "rand::sample(arr, 2) returns 2 items")
@@ -214,7 +214,7 @@ function main()
     @cfg(feature = "distributions")
     let m_bern = rng_md.bernoulli(1.0)
     @cfg(feature = "distributions")
-    runner_assert_eq(r, m_bern, 1, "rng.bernoulli() struct method works")
+    runner_assert_eq(r, m_bern, true, "rng.bernoulli() struct method works")
 
     @cfg(feature = "distributions")
     let m_bin = rng_md.binomial(4, 1.0)
@@ -224,7 +224,7 @@ function main()
     @cfg(feature = "distributions")
     let m_chance = rng_md.chance(100)
     @cfg(feature = "distributions")
-    runner_assert_eq(r, m_chance, 1, "rng.chance() struct method works")
+    runner_assert_eq(r, m_chance, true, "rng.chance() struct method works")
 
     # ═══════════════════════════════════════════════════════════════
     # 8. Instance Helpers for Strings and Distributions
