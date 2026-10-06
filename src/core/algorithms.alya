@@ -12,7 +12,7 @@ function algo_auto_seed()
     let ms = clock_ms()
     let s = (t * 1000000) + ms
     s = bit_xor(s, bit_shr(s, 30))
-    s = s * 7046029254386353
+    s *= 7046029254386353
     s = bit_xor(s, bit_shr(s, 27))
     if s == 0
         s = 12345678901234567
