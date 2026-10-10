@@ -13,8 +13,8 @@ function main()
     say "Random Int [1..10]: " + str(rand::int(1, 10))
     let rf = rand::rand_float()
     let rf_range = rand::float_range(1.0, 5.0)
-    say "Random Float [0..1): {rf}"
-    say "Random Float [1..5): {rf_range}"
+    say f"Random Float [0..1): {rf}"
+    say f"Random Float [1..5): {rf_range}"
     say "Random Bool:        " + str(rand::bool())
     say "Chance (75%):       " + str(rand::chance(75))
     say "Die Roll (d20):     " + str(rand::die(20))
@@ -42,8 +42,8 @@ function main()
     say "--- 3. Statistical Distributions ---"
     let norm_val = rand::normal(100.0, 15.0)
     let exp_val = rand::exponential(1.5)
-    say "Normal (mean=100, stddev=15): {norm_val}"
-    say "Exponential (rate=1.5):       {exp_val}"
+    say f"Normal (mean=100, stddev=15): {norm_val}"
+    say f"Exponential (rate=1.5):       {exp_val}"
     say "Bernoulli (p=0.3):            " + str(rand::bernoulli(0.3))
     say "Binomial (n=10, p=0.5):        " + str(rand::binomial(10, 0.5))
     say ""
